@@ -855,26 +855,57 @@ document.getElementById('btnVSubmit').addEventListener('click', function() {
   vagasLog.unshift(entry);
   vRenderLog();
 
-  // Envio de e-mail via mailto
-  const subject = encodeURIComponent('['+entry.protocol+'] Solicitação de Vaga: '+entry.cargo+' — '+entry.depto);
-  const body = encodeURIComponent(
-'Protocolo: '+entry.protocol+'\nData: '+entry.dataFmt+
-'\n\n── INFORMAÇÕES GERAIS ──'+
-'\nCargo: '+entry.cargo+'\nDepartamento: '+entry.depto+
-'\nNº de vagas: '+entry.numVagas+'\nTipo: '+entry.tipo+'\nPrazo: '+entry.prazo+
-'\n\n── PERFIL ──'+
-'\nFaixa salarial: '+entry.salario+'\nNível: '+entry.nivel+'\nModalidade: '+entry.modalidade+
-'\nResponsabilidades: '+entry.resp+'\nHabilidades: '+entry.skills+
-'\n\n── JUSTIFICATIVA ──'+
-'\nMotivo: '+entry.motivo+'\nUrgência: '+entry.urgencia+'\nJustificativa: '+entry.justif+
-'\n\n── SOLICITANTE ──'+
-'\nNome: '+entry.solicit+'\nE-mail: '+entry.email+'\nGestor: '+entry.gestor+'\nE-mail gestor: '+entry.emailGestor
-  );
-  window.location.href = 'mailto:RH@concretaeng.com.br?subject='+subject+'&body='+body;
+  // Envio via Formspree (AJAX)
+  const btnSubmit = document.getElementById('btnVSubmit');
+  btnSubmit.disabled = true;
+  btnSubmit.textContent = '⏳ Enviando...';
 
-  document.getElementById('vFormBody').style.display = 'none';
-  document.getElementById('vSuccess').style.display = 'block';
-  document.getElementById('vProtocol').textContent = protocol;
+  const payload = new FormData();
+  payload.append('_subject', '['+entry.protocol+'] Solicitação de Vaga: '+entry.cargo+' — '+entry.depto);
+  payload.append('Protocolo', entry.protocol);
+  payload.append('Data', entry.dataFmt);
+  payload.append('Cargo', entry.cargo);
+  payload.append('Departamento', entry.depto);
+  payload.append('Nº de vagas', entry.numVagas);
+  payload.append('Tipo de contratação', entry.tipo);
+  payload.append('Prazo', entry.prazo);
+  payload.append('Faixa salarial', entry.salario);
+  payload.append('Nível', entry.nivel);
+  payload.append('Modalidade', entry.modalidade);
+  payload.append('Responsabilidades', entry.resp);
+  payload.append('Habilidades desejadas', entry.skills);
+  payload.append('Motivo', entry.motivo);
+  payload.append('Urgência', entry.urgencia);
+  payload.append('Justificativa', entry.justif);
+  payload.append('Solicitante', entry.solicit);
+  payload.append('E-mail solicitante', entry.email);
+  payload.append('Gestor', entry.gestor);
+  payload.append('E-mail gestor', entry.emailGestor);
+  payload.append('_replyto', entry.email);
+
+  fetch('https://formspree.io/f/xykvwbrp', {
+    method: 'POST',
+    body: payload,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(function(res) {
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = '📨 Enviar para o RH';
+    if (res.ok) {
+      document.getElementById('vFormBody').style.display = 'none';
+      document.getElementById('vSuccess').style.display = 'block';
+      document.getElementById('vProtocol').textContent = entry.protocol;
+    } else {
+      res.json().then(function(data) {
+        alert('Erro ao enviar: ' + (data.error || 'Tente novamente.'));
+      });
+    }
+  })
+  .catch(function() {
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = '📨 Enviar para o RH';
+    alert('Erro de conexão. Verifique sua internet e tente novamente.');
+  });
 });
 
 document.getElementById('btnVClear').addEventListener('click', vClear);
