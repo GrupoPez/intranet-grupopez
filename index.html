@@ -281,15 +281,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <div class="hero">
-      <div class="hero-l">
-        <div class="hero-tag">Portal corporativo interno</div>
-        <div class="hero-title">Grupo Pez</div>
-        <div class="hero-sub">Conectando pessoas, projetos e resultados · <span id="heroDate"></span></div>
-      </div>
-      <div class="hero-pill">👋 Bem-vindo</div>
-    </div>
-
     <!-- BANNER DINÂMICO -->
     <div id="bannerDinamico" style="margin-bottom:24px"></div>
 
@@ -1093,105 +1084,15 @@ function doReact(type){
   var convite=params.get('festa')==='sim';
   var hoje=new Date(),festa=new Date('2026-06-19T23:59:59');
   var el=document.getElementById('bannerDinamico');if(!el)return;
-  if(convite&&hoje<=festa){
-    el.innerHTML='<div style="border-radius:14px;overflow:hidden"><div id="arraiabanner" style="position:relative;background:#0a0d2e;overflow:hidden;font-family:Georgia,serif">'
-    +'<svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 900 580" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">'
-    // Estrelas
-    +'<g fill="#fff"><circle cx="40" cy="20" r="1.3" opacity=".8"/><circle cx="100" cy="40" r="1" opacity=".6"/><circle cx="180" cy="15" r="1.5" opacity=".9"/><circle cx="250" cy="35" r="1" opacity=".7"/><circle cx="340" cy="12" r="1.2" opacity=".8"/><circle cx="420" cy="28" r="1.5" opacity=".9"/><circle cx="500" cy="18" r="1" opacity=".6"/><circle cx="590" cy="32" r="1.3" opacity=".8"/><circle cx="670" cy="10" r="1" opacity=".7"/><circle cx="750" cy="25" r="1.5" opacity=".9"/><circle cx="830" cy="38" r="1.2" opacity=".8"/><circle cx="880" cy="16" r="1" opacity=".6"/><circle cx="60" cy="65" r="1" opacity=".5"/><circle cx="150" cy="70" r="1.3" opacity=".7"/><circle cx="290" cy="58" r="1" opacity=".6"/><circle cx="460" cy="72" r="1.2" opacity=".8"/><circle cx="610" cy="60" r="1" opacity=".5"/><circle cx="780" cy="68" r="1.3" opacity=".7"/></g>'
-    // Luzes varal
-    +'<circle cx="200" cy="52" r="4" fill="#ffe566" opacity=".7"/><circle cx="390" cy="48" r="4" fill="#ffe566" opacity=".7"/><circle cx="580" cy="50" r="4" fill="#ffe566" opacity=".7"/><circle cx="770" cy="48" r="4" fill="#ffe566" opacity=".7"/>'
-    // Montanhas fundo
-    +'<path d="M0 440 Q150 330 280 400 Q400 320 520 380 Q650 290 780 370 Q850 320 900 350 L900 580 L0 580Z" fill="#0d1a0d" opacity=".55"/>'
-    +'<rect x="0" y="510" width="900" height="70" fill="#0d1a05" opacity=".65"/>'
-    // Fogueira
-    +'<ellipse cx="450" cy="528" rx="55" ry="10" fill="#1a0800" opacity=".7"/>'
-    +'<rect x="420" y="486" width="9" height="48" rx="4" fill="#5c2d0a" transform="rotate(-18,424,510)"/>'
-    +'<rect x="471" y="486" width="9" height="48" rx="4" fill="#5c2d0a" transform="rotate(18,476,510)"/>'
-    +'<rect x="443" y="490" width="9" height="42" rx="3" fill="#7a3a0e"/>'
-    +'<ellipse cx="450" cy="478" rx="28" ry="36" fill="#c44b00" opacity=".85"/>'
-    +'<ellipse cx="450" cy="468" rx="20" ry="26" fill="#e87000" opacity=".9"/>'
-    +'<ellipse cx="450" cy="458" rx="13" ry="19" fill="#f5a800" opacity=".95"/>'
-    +'<ellipse cx="450" cy="450" rx="7" ry="13" fill="#ffe000" opacity=".9"/>'
-    // Cercas
-    +'<rect x="10" y="360" width="9" height="160" rx="3" fill="#5c3a1e"/><rect x="50" y="370" width="9" height="150" rx="3" fill="#5c3a1e"/><rect x="90" y="365" width="9" height="155" rx="3" fill="#5c3a1e"/>'
-    +'<rect x="10" y="400" width="89" height="9" rx="3" fill="#7a4f2b"/><rect x="10" y="450" width="89" height="9" rx="3" fill="#7a4f2b"/><rect x="10" y="500" width="89" height="9" rx="3" fill="#7a4f2b"/>'
-    +'<rect x="800" y="360" width="9" height="160" rx="3" fill="#5c3a1e"/><rect x="840" y="370" width="9" height="150" rx="3" fill="#5c3a1e"/><rect x="880" y="365" width="9" height="155" rx="3" fill="#5c3a1e"/>'
-    +'<rect x="800" y="400" width="89" height="9" rx="3" fill="#7a4f2b"/><rect x="800" y="450" width="89" height="9" rx="3" fill="#7a4f2b"/><rect x="800" y="500" width="89" height="9" rx="3" fill="#7a4f2b"/>'
-    // Girassóis esq
-    +'<rect x="126" y="390" width="8" height="130" rx="3" fill="#1e6010"/>'
-    +'<circle cx="130" cy="378" r="24" fill="#FFD100"/><circle cx="130" cy="378" r="13" fill="#7a3a0e"/>'
-    +'<ellipse cx="130" cy="351" rx="7" ry="14" fill="#FFD100" opacity=".85"/><ellipse cx="130" cy="405" rx="7" ry="14" fill="#FFD100" opacity=".85"/>'
-    +'<ellipse cx="103" cy="378" rx="14" ry="7" fill="#FFD100" opacity=".85"/><ellipse cx="157" cy="378" rx="14" ry="7" fill="#FFD100" opacity=".85"/>'
-    +'<ellipse cx="111" cy="359" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(-45,111,359)"/>'
-    +'<ellipse cx="149" cy="359" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(45,149,359)"/>'
-    +'<ellipse cx="111" cy="397" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(45,111,397)"/>'
-    +'<ellipse cx="149" cy="397" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(-45,149,397)"/>'
-    // Girassol menor esq
-    +'<rect x="158" y="420" width="6" height="100" rx="2" fill="#1e6010"/>'
-    +'<circle cx="161" cy="410" r="15" fill="#FFD100"/><circle cx="161" cy="410" r="8" fill="#7a3a0e"/>'
-    +'<ellipse cx="161" cy="392" rx="5" ry="9" fill="#FFD100" opacity=".8"/><ellipse cx="161" cy="428" rx="5" ry="9" fill="#FFD100" opacity=".8"/>'
-    +'<ellipse cx="143" cy="410" rx="9" ry="5" fill="#FFD100" opacity=".8"/><ellipse cx="179" cy="410" rx="9" ry="5" fill="#FFD100" opacity=".8"/>'
-    // Girassóis dir
-    +'<rect x="764" y="390" width="8" height="130" rx="3" fill="#1e6010"/>'
-    +'<circle cx="768" cy="378" r="24" fill="#FFD100"/><circle cx="768" cy="378" r="13" fill="#7a3a0e"/>'
-    +'<ellipse cx="768" cy="351" rx="7" ry="14" fill="#FFD100" opacity=".85"/><ellipse cx="768" cy="405" rx="7" ry="14" fill="#FFD100" opacity=".85"/>'
-    +'<ellipse cx="741" cy="378" rx="14" ry="7" fill="#FFD100" opacity=".85"/><ellipse cx="795" cy="378" rx="14" ry="7" fill="#FFD100" opacity=".85"/>'
-    +'<ellipse cx="749" cy="359" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(-45,749,359)"/>'
-    +'<ellipse cx="787" cy="359" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(45,787,359)"/>'
-    +'<ellipse cx="749" cy="397" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(45,749,397)"/>'
-    +'<ellipse cx="787" cy="397" rx="7" ry="14" fill="#FFD100" opacity=".72" transform="rotate(-45,787,397)"/>'
-    // Girassol menor dir
-    +'<rect x="734" y="420" width="6" height="100" rx="2" fill="#1e6010"/>'
-    +'<circle cx="737" cy="410" r="15" fill="#FFD100"/><circle cx="737" cy="410" r="8" fill="#7a3a0e"/>'
-    +'<ellipse cx="737" cy="392" rx="5" ry="9" fill="#FFD100" opacity=".8"/><ellipse cx="737" cy="428" rx="5" ry="9" fill="#FFD100" opacity=".8"/>'
-    +'<ellipse cx="719" cy="410" rx="9" ry="5" fill="#FFD100" opacity=".8"/><ellipse cx="755" cy="410" rx="9" ry="5" fill="#FFD100" opacity=".8"/>'
-    // Chapéu
-    +'<ellipse cx="175" cy="295" rx="44" ry="13" fill="#c8922a"/>'
-    +'<path d="M146 292 Q155 255 175 248 Q195 255 204 292Z" fill="#d9a93a"/>'
-    +'<rect x="144" y="286" width="62" height="9" rx="3" fill="#8B6914"/>'
-    // Sanfona
-    +'<rect x="736" y="308" width="52" height="72" rx="4" fill="#8B0000"/>'
-    +'<rect x="740" y="312" width="44" height="64" rx="2" fill="#aa0000"/>'
-    +'<line x1="740" y1="324" x2="784" y2="324" stroke="#700000" stroke-width="2"/>'
-    +'<line x1="740" y1="336" x2="784" y2="336" stroke="#700000" stroke-width="2"/>'
-    +'<line x1="740" y1="348" x2="784" y2="348" stroke="#700000" stroke-width="2"/>'
-    +'<line x1="740" y1="360" x2="784" y2="360" stroke="#700000" stroke-width="2"/>'
-    +'<circle cx="762" cy="348" r="10" fill="#700000"/>'
-    // Corda bandeirinhas
-    +'<path d="M0 98 Q225 124 450 108 Q675 92 900 102" fill="none" stroke="#8B6914" stroke-width="2"/>'
-    // Bandeirinhas
-    +'<polygon points="22,98 52,98 37,126" fill="#cc2200"/><polygon points="57,100 87,100 72,128" fill="#FFD100"/><polygon points="92,101 122,101 107,129" fill="#1a7a30"/><polygon points="127,102 157,102 142,130" fill="#1144aa"/><polygon points="162,102 192,102 177,130" fill="#cc2200"/><polygon points="208,103 238,103 223,131" fill="#FFD100"/><polygon points="254,104 284,104 269,132" fill="#1a7a30"/><polygon points="300,104 330,104 315,132" fill="#cc2200"/><polygon points="346,105 376,105 361,133" fill="#1144aa"/><polygon points="388,105 418,105 403,133" fill="#FFD100"/><polygon points="430,105 460,105 445,133" fill="#cc2200"/><polygon points="472,105 502,105 487,133" fill="#1a7a30"/><polygon points="514,105 544,105 529,133" fill="#FFD100"/><polygon points="556,104 586,104 571,132" fill="#cc2200"/><polygon points="598,104 628,104 613,132" fill="#1144aa"/><polygon points="640,103 670,103 655,131" fill="#FFD100"/><polygon points="682,103 712,103 697,131" fill="#1a7a30"/><polygon points="724,102 754,102 739,130" fill="#cc2200"/><polygon points="766,101 796,101 781,129" fill="#FFD100"/><polygon points="808,100 838,100 823,128" fill="#1144aa"/><polygon points="850,99 880,99 865,127" fill="#1a7a30"/>'
-    // Lanternas
-    +'<line x1="72" y1="98" x2="72" y2="152" stroke="#8B6914" stroke-width="2"/>'
-    +'<ellipse cx="72" cy="190" rx="30" ry="40" fill="#e07b00"/>'
-    +'<rect x="58" y="152" width="28" height="8" rx="3" fill="#b35f00"/>'
-    +'<rect x="58" y="230" width="28" height="8" rx="3" fill="#b35f00"/>'
-    +'<line x1="62" y1="167" x2="82" y2="167" stroke="#a06000" stroke-width="1.5" opacity=".6"/>'
-    +'<line x1="59" y1="185" x2="85" y2="185" stroke="#a06000" stroke-width="1.5" opacity=".6"/>'
-    +'<line x1="59" y1="203" x2="85" y2="203" stroke="#a06000" stroke-width="1.5" opacity=".6"/>'
-    +'<ellipse cx="72" cy="190" rx="10" ry="14" fill="#ffcc00" opacity=".22"/>'
-    +'<line x1="828" y1="95" x2="828" y2="148" stroke="#8B6914" stroke-width="2"/>'
-    +'<ellipse cx="828" cy="188" rx="30" ry="40" fill="#1144aa"/>'
-    +'<rect x="814" y="148" width="28" height="8" rx="3" fill="#0a2d88"/>'
-    +'<rect x="814" y="228" width="28" height="8" rx="3" fill="#0a2d88"/>'
-    +'<line x1="818" y1="163" x2="838" y2="163" stroke="#0a2d88" stroke-width="1.5" opacity=".6"/>'
-    +'<line x1="815" y1="181" x2="841" y2="181" stroke="#0a2d88" stroke-width="1.5" opacity=".6"/>'
-    +'<line x1="815" y1="199" x2="841" y2="199" stroke="#0a2d88" stroke-width="1.5" opacity=".6"/>'
-    +'<ellipse cx="828" cy="188" rx="10" ry="14" fill="#99ccff" opacity=".18"/>'
-    +'</svg>'
-    // Conteúdo sobre o SVG
-    +'<div style="position:relative;z-index:2;padding:120px 60px 26px;text-align:center">'
-    +'<div style="background:rgba(80,40,10,.88);border:2px solid #8B6914;border-radius:7px;padding:7px 28px;display:inline-block;margin-bottom:10px"><span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:#FFD100;letter-spacing:2px">COLOQUE SEU TRAJE E VENHA PARA O</span></div>'
-    +'<div style="font-family:Georgia,serif;font-size:82px;font-weight:900;line-height:1;margin-bottom:6px;letter-spacing:5px"><span style="color:#e63946;text-shadow:3px 3px 0 #700000">A</span><span style="color:#FFD100;text-shadow:3px 3px 0 #8B6914">R</span><span style="color:#1a7a30;text-shadow:3px 3px 0 #0a3a10">R</span><span style="color:#1144aa;text-shadow:3px 3px 0 #060d55">A</span><span style="color:#e63946;text-shadow:3px 3px 0 #700000">I</span><span style="color:#FFD100;text-shadow:3px 3px 0 #8B6914">Á</span></div>'
-    +'<div style="background:#FFD100;border-radius:20px;padding:5px 28px;display:inline-block;margin-bottom:10px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:900;color:#0a0d2e;letter-spacing:6px">DO</span></div>'
-    +'<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px"><span style="font-family:Arial,sans-serif;font-size:34px;font-weight:900;color:#fff;letter-spacing:3px">GRUPO PEZ</span></div>'
-    +'<div style="background:linear-gradient(180deg,#6b3f1a,#5c3010);border:3px solid #8B6914;border-radius:10px;padding:14px 20px;margin:0 auto 14px;max-width:640px"><div style="display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:8px"><div style="text-align:center"><div style="font-size:20px">📅</div><div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#FFD100;line-height:1.3">19 DE<br>JUNHO</div></div><div style="width:2px;height:46px;background:#8B6914"></div><div style="text-align:center"><div style="font-size:20px">🕖</div><div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#FFD100">ÀS 19H</div></div><div style="width:2px;height:46px;background:#8B6914"></div><div style="text-align:center"><div style="font-size:20px">📍</div><div style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:#FFD100;line-height:1.4">ESTACIONAMENTO<br><span style="font-size:11px;color:#e8c97a">( Rua Santo André )</span></div></div></div></div>'
-    +'<div style="background:#FFD100;border-radius:30px;padding:10px 30px;display:inline-block;margin-bottom:12px"><span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0a0d2e">✦ COMIDAS TÍPICAS E BINGO! ✦</span></div>'
-    +'<div style="margin-bottom:12px"><div style="background:rgba(180,20,20,.88);border-radius:8px;padding:10px 22px;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center"><span style="font-size:18px">🔔</span><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#fff">CONFIRMAR PRESENÇA NA RECEPÇÃO</span><span style="width:2px;height:18px;background:rgba(255,255,255,.3)"></span><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#FFD100">ATÉ DIA 05/06</span></div></div>'
-    +'<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 0 8px">'
-    +'<button class="br" id="btnLike" onclick="doReact(\'like\')">👍 <span style="font-size:16px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.25);border-radius:99px;padding:3px 12px;font-size:15px;font-weight:700;color:#fff">0</span></button>'
-    +'<button class="br" id="btnHeart" onclick="doReact(\'heart\')">❤️ <span style="font-size:16px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.25);border-radius:99px;padding:3px 12px;font-size:15px;font-weight:700;color:#fff">0</span></button>'
-    +'</div></div></div></div>';
+  if(mostrarFesta){
+    el.innerHTML=
+      '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:column;align-items:center">'
+        +'<img src="Festa Junina Grupo Pez.jpeg" alt="Arraiá do Grupo Pez — 19 de junho às 19h" style="width:100%;max-width:520px;display:block;border-radius:14px 14px 0 0">'
+        +'<div style="width:100%;max-width:520px;background:rgba(10,6,30,.92);border-radius:0 0 14px 14px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px">'
+          +'<button class="br" id="btnLike" onclick="doReact(\'like\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">👍 <span style="font-size:15px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
+          +'<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">❤️ <span style="font-size:15px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
+        +'</div>'
+      +'</div>';
   } else {
     el.innerHTML='<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden"><div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,209,0,.06)"></div><div style="position:relative;z-index:1"><div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:7px">Portal Corporativo Interno</div><div style="font-family:var(--ft);font-size:32px;font-weight:700;color:#fff;margin-bottom:7px">Grupo Pez</div><div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:18px">Conectando pessoas, projetos e resultados.</div><div style="display:flex;gap:9px;flex-wrap:wrap"><div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px;font-weight:500">🏗️ 25 anos de história</div><div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px;font-weight:500">🌎 Obras em todo o Brasil</div><div style="background:rgba(255,209,0,.14);border:1px solid rgba(255,209,0,.28);border-radius:7px;padding:7px 14px;color:var(--am);font-size:11px;font-weight:700">✦ Construindo o futuro</div></div></div><div style="position:relative;z-index:1;flex-shrink:0"><div style="width:88px;height:88px;background:rgba(255,255,255,.07);border-radius:18px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,209,0,.18)"><svg width="56" height="56" viewBox="0 0 64 64"><path d="M16 16h12l8 16-8 16H16l8-16z" fill="#FFD100"/><path d="M36 16h12l8 16-8 16H36l8-16z" fill="rgba(255,209,0,.38)"/></svg></div></div></div>';
   }
