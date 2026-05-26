@@ -318,7 +318,23 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
       <div class="qc" data-goto="links"><div class="qi">🎓</div><div class="ql">Treinamentos</div></div>
     </div>
 
-    <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px">
+    <!-- ANIVERSARIANTES -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px" id="anivGrid">
+      <div class="card">
+        <div class="ch">
+          <div class="ch-title">🎂 Aniversariantes do Mês</div>
+          <span style="font-size:10px;color:var(--muted)" id="anivMesLabel"></span>
+        </div>
+        <div class="cb" id="anivMesList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">⏳ Carregando...</div></div>
+      </div>
+      <div class="card">
+        <div class="ch">
+          <div class="ch-title">🏆 Aniversários de Empresa</div>
+          <span style="font-size:10px;color:var(--muted)" id="anivEmpLabel"></span>
+        </div>
+        <div class="cb" id="anivEmpList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">⏳ Carregando...</div></div>
+      </div>
+    </div>
       <div class="card">
         <div class="ch"><div class="ch-title">📢 Comunicados recentes</div><a class="sl" data-goto="noticias">Ver todos</a></div>
         <div class="cb"><div id="homeNewsList"></div></div>
@@ -1222,6 +1238,7 @@ function doReact(type){
   vProgress();
   renderHome();
   renderBanner();
+  carregarAniversariantes();
 })();
 
 function renderBanner(){
