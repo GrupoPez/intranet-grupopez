@@ -1035,6 +1035,10 @@ function carregarPlanilha(){
 }
 
 // ── ANIVERSARIANTES ──
+function getIniciais(nome){
+  var p=String(nome||'').trim().split(' ').filter(function(x){return x.length>1;});
+  return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():String(nome||'?')[0].toUpperCase();
+}
 function parseDate(val){
   if(!val)return null;
   if(val instanceof Date)return val;
@@ -1047,45 +1051,54 @@ function getIniciais(nome){var p=String(nome||'').trim().split(' ').filter(funct
 function carregarAniversariantes(){
   var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   var hoje=new Date(),mes=hoje.getMonth(),dia=hoje.getDate();
-  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/colaboradores-pj.xlsx')
-  .then(function(r){if(!r.ok)throw new Error();return r.arrayBuffer();})
-  .then(function(buf){
-    var wb=XLSX.read(buf,{type:'array',cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]],data=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
-    var ativos=data.filter(function(r){return String(r['CODSITUACAO']||'').trim().toUpperCase()==='A';});
+  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/aniversariantes.xlsx')
     // Aniversários de nascimento
     var nascMes=[];
     ativos.forEach(function(r){
-      var nome=String(r['NOME']||r['nome']||'').trim();
-      var cargo=String(r['CARGO']||r['cargo']||r['SETOR']||'').trim();
-      var dt=r['DTNASCIMENTO']||r['dtnascimento']||'';
-      if(typeof dt==='number')dt=XLSX.SSF.parse_date_code(dt);
-      var d=dt instanceof Date?dt:parseDate(String(dt));
+      var nome=String(r['NOME']||r['Nome']||r['nome']||r['COLABORADOR']||'').trim();
+      var cargo=String(r['CARGO']||r['Cargo']||r['cargo']||r['FUNCAO']||r['SETOR']||'').trim();
+      var dtRaw=r['DTNASCIMENTO']||r['DT_NASCIMENTO']||r['NASCIMENTO']||r['DT NASCIMENTO']||r['DATA NASCIMENTO']||r['DataNascimento']||'';
+      if(typeof dtRaw==='number')dtRaw=XLSX.SSF.parse_date_code(dtRaw);
+      var d=dtRaw instanceof Date?dtRaw:parseDate(String(dtRaw));
       if(!d||isNaN(d)||!nome)return;
       if(d.getMonth()===mes)nascMes.push({nome:nome,cargo:cargo,dia:d.getDate(),hoje:d.getDate()===dia});
     });
     nascMes.sort(function(a,b){return a.dia-b.dia;});
     var cores=['#002D72','#003F9E','#1a7a30','#854D0E','#065F46','#6B21A8'];
     document.getElementById('anivMesLabel').textContent=meses[mes]+' · '+nascMes.length+' aniversariante'+(nascMes.length!==1?'s':'');
-    document.getElementById('anivMesList').innerHTML=nascMes.length
-      ?'<div style="max-height:300px;overflow-y:auto">'+nascMes.map(function(p){var cor=cores[p.nome.charCodeAt(0)%cores.length];return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.cargo?'<div style="font-size:10px;color:var(--muted)">'+p.cargo+'</div>':'')+'</div><span class="aniv-badge '+(p.hoje?'ab-hoje"'>🎂 Hoje!</span>':'ab-mes">'+'Dia '+p.dia+'</span>')+'</div>';}).join('')+'</div>'
-      :'<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversariante este mês.</div>';
+    if(nascMes.length){
+      document.getElementById('anivMesList').innerHTML='<div style="max-height:300px;overflow-y:auto">'+nascMes.map(function(p){
+        var cor=cores[p.nome.charCodeAt(0)%cores.length];
+        var badge=p.hoje?'<span class="aniv-badge ab-hoje">&#x1F382; Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>';
+        return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.sub&&p.sub!=='\\N'?'<div style="font-size:10px;color:var(--muted)">'+p.sub+'</div>':'')+'</div>'+badge+'</div>';
+      }).join('')+'</div>';
+    } else {
+      document.getElementById('anivMesList').innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversariante este mes.</div>';
+    }
     // Aniversários de empresa
     var empMes=[];
     ativos.forEach(function(r){
-      var nome=String(r['NOME']||r['nome']||'').trim();
-      var cargo=String(r['CARGO']||r['cargo']||r['SETOR']||'').trim();
-      var dt=r['DATAADMISSAO']||r['dataadmissao']||'';
-      if(typeof dt==='number')dt=XLSX.SSF.parse_date_code(dt);
-      var d=dt instanceof Date?dt:parseDate(String(dt));
+      var nome=String(r['NOME']||'').trim();
+      var apelido=String(r['APELIDO']||'').trim();
+      var dtRaw=r['DATAADMISSAO']||'';
+      if(typeof dtRaw==='number')dtRaw=XLSX.SSF.parse_date_code(dtRaw);
+      if(typeof dtRaw==='string'&&dtRaw.indexOf(' ')>-1)dtRaw=dtRaw.split(' ')[0];
+      var d=dtRaw instanceof Date?dtRaw:parseDate(String(dtRaw));
       if(!d||isNaN(d)||!nome)return;
       var anos=hoje.getFullYear()-d.getFullYear();
-      if(d.getMonth()===mes&&anos>0)empMes.push({nome:nome,cargo:cargo,dia:d.getDate(),anos:anos,hoje:d.getDate()===dia});
+      if(d.getMonth()===mes&&anos>0)empMes.push({nome:nome,sub:apelido,dia:d.getDate(),anos:anos,hoje:d.getDate()===dia});
     });
     empMes.sort(function(a,b){return a.dia-b.dia;});
     document.getElementById('anivEmpLabel').textContent=meses[mes]+' · '+empMes.length+' colaborador'+(empMes.length!==1?'es':'');
-    document.getElementById('anivEmpList').innerHTML=empMes.length
-      ?'<div style="max-height:300px;overflow-y:auto">'+empMes.map(function(p){var cor=cores[p.nome.charCodeAt(0)%cores.length];return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.cargo?'<div style="font-size:10px;color:var(--muted)">'+p.cargo+'</div>':'')+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="aniv-badge ab-anos">🏆 '+p.anos+' ano'+(p.anos>1?'s':'')+'</span>'+(p.hoje?'<span class="aniv-badge ab-hoje">Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>')+'</div></div>';}).join('')+'</div>'
-      :'<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversário de empresa este mês.</div>';
+    if(empMes.length){
+      document.getElementById('anivEmpList').innerHTML='<div style="max-height:300px;overflow-y:auto">'+empMes.map(function(p){
+        var cor=cores[p.nome.charCodeAt(0)%cores.length];
+        var badge=p.hoje?'<span class="aniv-badge ab-hoje">Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>';
+        return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.sub&&p.sub!=='\\N'?'<div style="font-size:10px;color:var(--muted)">'+p.sub+'</div>':'')+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="aniv-badge ab-anos">&#x1F3C6; '+p.anos+' ano'+(p.anos>1?'s':'')+'</span>'+badge+'</div></div>';
+      }).join('')+'</div>';
+    } else {
+      document.getElementById('anivEmpList').innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversario de empresa este mes.</div>';
+    }
   }).catch(function(){
     document.getElementById('anivMesList').innerHTML='<div style="font-size:11px;color:var(--muted);text-align:center;padding:12px">Planilha não encontrada.</div>';
     document.getElementById('anivEmpList').innerHTML='<div style="font-size:11px;color:var(--muted);text-align:center;padding:12px">Planilha não encontrada.</div>';
