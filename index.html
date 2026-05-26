@@ -273,9 +273,19 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 <main class="main">
   <div class="topbar">
     <div class="tb-title" id="tbTitle">Início</div>
-    <div class="tb-right">
+    <div class="tb-right" style="position:relative">
       <span class="tb-date" id="tbDate"></span>
       <span class="tb-badge">Grupo Pez</span>
+      <button class="notif-btn" id="btnNotif" title="Notificações">
+        🔔<span class="notif-badge" id="notifBadge">0</span>
+      </button>
+      <div class="notif-panel" id="notifPanel">
+        <div class="notif-header">
+          <span class="notif-title">🔔 Notificações</span>
+          <button class="notif-clear" id="btnNotifClear">Marcar todas como lidas</button>
+        </div>
+        <div id="notifList"><div class="notif-empty">Nenhuma notificação.</div></div>
+      </div>
     </div>
   </div>
 
@@ -816,7 +826,78 @@ var RH_USERS=[{email:'RH@concretaeng.com.br',senha:'GrupoPez@RH2026'},{email:'TI
 var UPLOADCARE_KEY='66b7f6357a9aa19ef0e8';
 var likes=0,hearts=0,likedMe=false,heartedMe=false;
 
-// ── NAVEGAÇÃO ──
+// ── NOTIFICAÇÕES ──
+var notificacoes=[];
+function addNotif(icon,txt,sub,page){
+  notificacoes.unshift({icon:icon,txt:txt,sub:sub,page:page,lida:false,id:Date.now()});
+  renderNotif();
+}
+function renderNotif(){
+  var unread=notificacoes.filter(function(n){return !n.lida;}).length;
+  var badge=document.getElementById('notifBadge');
+  var list=document.getElementById('notifList');
+  if(unread>0){badge.textContent=unread>9?'9+':unread;badge.classList.add('show');}
+  else{badge.classList.remove('show');}
+  if(!notificacoes.length){list.innerHTML='<div class="notif-empty">Nenhuma notificação.</div>';return;}
+  list.innerHTML=notificacoes.map(function(n,i){
+    return '<div class="notif-item'+(n.lida?'':' unread')+'" onclick="notifClick('+i+')">'
+      +'<div class="notif-ic">'+n.icon+'</div>'
+      +'<div><div class="notif-txt">'+n.txt+'</div><div class="notif-sub">'+n.sub+'</div></div>'
+    +'</div>';
+  }).join('');
+}
+function notifClick(i){
+  notificacoes[i].lida=true;
+  var page=notificacoes[i].page;
+  renderNotif();
+  document.getElementById('notifPanel').classList.remove('open');
+  if(page) nav(page);
+}
+document.getElementById('btnNotif').addEventListener('click',function(e){
+  e.stopPropagation();
+  document.getElementById('notifPanel').classList.toggle('open');
+});
+document.getElementById('btnNotifClear').addEventListener('click',function(){
+  notificacoes.forEach(function(n){n.lida=true;});renderNotif();
+});
+document.addEventListener('click',function(e){
+  var panel=document.getElementById('notifPanel');
+  if(!panel.contains(e.target)&&e.target!==document.getElementById('btnNotif'))
+    panel.classList.remove('open');
+});
+
+// ── RETORNO E-MAIL RH → SOLICITANTE ──
+function enviarRetornoFerias(entry){
+  var statusLabel=entry.status==='aprovado'?'✅ APROVADO':entry.status==='reprovado'?'❌ REPROVADO':'⏳ PENDENTE';
+  var subject=encodeURIComponent('['+entry.protocol+'] Férias '+statusLabel+' — '+entry.nome);
+  var body=encodeURIComponent(
+    'Olá, '+entry.nome+'!\n\n'
+    +'Sua solicitação de férias foi atualizada.\n\n'
+    +'Protocolo: '+entry.protocol+'\n'
+    +'Status: '+statusLabel+'\n'
+    +'Período: '+new Date(entry.inicio+'T12:00:00').toLocaleDateString('pt-BR')+' até '+new Date(entry.fim+'T12:00:00').toLocaleDateString('pt-BR')+'\n'
+    +'Dias: '+entry.dias+'\n'
+    +(entry.justificativa&&entry.justificativa!==''?'Justificativa do RH: '+entry.justificativa+'\n':'\n')
+    +'\nEm caso de dúvidas, entre em contato com o RH: RH@concretaeng.com.br\n\n'
+    +'Atenciosamente,\nRH — Grupo Pez'
+  );
+  window.location.href='mailto:'+entry.email+'?subject='+subject+'&body='+body;
+}
+function enviarRetornoVaga(entry){
+  var subject=encodeURIComponent('['+entry.protocol+'] Solicitação de Vaga Recebida — '+entry.cargo);
+  var body=encodeURIComponent(
+    'Olá, '+entry.solicit+'!\n\n'
+    +'Sua solicitação de abertura de vaga foi recebida pelo RH.\n\n'
+    +'Protocolo: '+entry.protocol+'\n'
+    +'Cargo: '+entry.cargo+'\n'
+    +'Departamento: '+entry.depto+'\n'
+    +'Urgência: '+entry.urgencia+'\n\n'
+    +'O RH entrará em contato em breve para dar continuidade ao processo.\n\n'
+    +'Em caso de dúvidas: RH@concretaeng.com.br\n\n'
+    +'Atenciosamente,\nRH — Grupo Pez'
+  );
+  window.location.href='mailto:'+entry.email+'?subject='+subject+'&body='+body;
+}
 var PT={home:'Início',noticias:'Comunicados',documentos:'Documentos',calendario:'Calendário',links:'Treinamentos',vagas:'Abertura de Vaga',enviarnf:'Enviar Nota Fiscal',solicitarferias:'Solicitar Férias',portalrh:'Portal RH'};
 function nav(page){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
@@ -966,6 +1047,8 @@ document.getElementById('btnVSubmit').addEventListener('click',function(){
   var now=new Date(),dfmt=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   var entry={protocol:prot,dataFmt:dfmt,cargo:document.getElementById('vCargo').value.trim(),depto:document.getElementById('vDepto').value,numVagas:document.getElementById('vNumVagas').value,tipo:document.getElementById('vTipoContrat').value,prazo:document.getElementById('vPrazo').value?new Date(document.getElementById('vPrazo').value+'T12:00:00').toLocaleDateString('pt-BR'):'—',salario:document.getElementById('vSalario').value.trim()||'—',nivel:document.getElementById('vNivel').value||'—',modalidade:vGetPill('vModalGroup')||'—',resp:document.getElementById('vResp').value.trim(),skills:vGetSkills(),motivo:document.getElementById('vMotivo').value,urgencia:vGetPill('vUrgGroup'),justif:document.getElementById('vJustif').value.trim()||'—',solicit:document.getElementById('vSolicit').value.trim(),email:document.getElementById('vEmail').value.trim(),gestor:document.getElementById('vGestor').value.trim()||'—',emailGestor:document.getElementById('vEmailGestor').value.trim()||'—'};
   vagasLog.unshift(entry);vRenderLog();
+  // Notificação para o RH
+  addNotif('🧑‍💼','Nova solicitação de vaga: '+entry.cargo,entry.depto+' · '+entry.urgencia+' · '+entry.dataFmt,'portalrh');
   var btn=document.getElementById('btnVSubmit');btn.disabled=true;btn.textContent='⏳ Enviando...';
   var p=new FormData();p.append('_subject','['+prot+'] Vaga: '+entry.cargo+' — '+entry.depto);p.append('Protocolo',prot);p.append('Cargo',entry.cargo);p.append('Departamento',entry.depto);p.append('Tipo',entry.tipo);p.append('Prazo',entry.prazo);p.append('Salário',entry.salario);p.append('Nível',entry.nivel);p.append('Modalidade',entry.modalidade);p.append('Responsabilidades',entry.resp);p.append('Habilidades',entry.skills);p.append('Motivo',entry.motivo);p.append('Urgência',entry.urgencia);p.append('Justificativa',entry.justif);p.append('Solicitante',entry.solicit);p.append('Email',entry.email);p.append('Gestor',entry.gestor);p.append('_replyto',entry.email);
   fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='📨 Enviar para o RH';if(r.ok){document.getElementById('vFormBody').style.display='none';document.getElementById('vSuccess').style.display='block';document.getElementById('vProtocol').textContent=prot;}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='📨 Enviar para o RH';alert('Erro de conexão.');});
@@ -1016,6 +1099,8 @@ document.getElementById('btnFPSubmit').addEventListener('click',function(){
   var usados=feriasLog.filter(function(f){return f.nome.toLowerCase()===nome.toLowerCase()&&f.status==='aprovado';}).reduce(function(a,f){return a+f.dias;},0);
   var entry={protocol:prot,data:now.toLocaleDateString('pt-BR'),nome:nome,email:document.getElementById('fpEmail').value.trim(),setor:document.getElementById('fpSetor').value.trim(),responsavel:document.getElementById('fpResponsavel').value.trim(),inicio:document.getElementById('fpInicio').value,fim:document.getElementById('fpFim').value,dias:dias,obs:document.getElementById('fpObs').value.trim()||'—',autUrl:fpAutUrl,status:'pendente',justificativa:'',diasDisp:disp,saldoApos:disp-usados-dias};
   feriasLog.unshift(entry);
+  // Notificação para o RH
+  addNotif('🌴','Nova solicitação de férias: '+entry.nome,entry.dias+' dias · '+new Date(entry.inicio+'T12:00:00').toLocaleDateString('pt-BR')+' até '+new Date(entry.fim+'T12:00:00').toLocaleDateString('pt-BR'),'portalrh');
   var btn=document.getElementById('btnFPSubmit');btn.disabled=true;btn.textContent='⏳ Enviando...';
   var p=new FormData();p.append('_subject','['+prot+'] Férias PJ: '+entry.nome+' — '+entry.dias+' dias');p.append('Protocolo',prot);p.append('Colaborador',entry.nome);p.append('Email',entry.email);p.append('Setor',entry.setor);p.append('Responsável',entry.responsavel);p.append('Período',entry.inicio+' até '+entry.fim);p.append('Dias',entry.dias);p.append('Saldo após',entry.saldoApos+(entry.saldoApos<0?' (NEGATIVO)':''));p.append('Observações',entry.obs);p.append('Autorização',entry.autUrl);p.append('_replyto',entry.email);
   fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='🌴 Enviar solicitação';if(r.ok){document.getElementById('feriasPJFormBody').style.display='none';document.getElementById('feriasPJSucesso').style.display='block';document.getElementById('fpProtocol').textContent=prot;fpAutUrl='';}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='🌴 Enviar solicitação';alert('Erro de conexão.');});
@@ -1092,9 +1177,10 @@ function doReact(type){
   else{if(!heartedMe){hearts++;heartedMe=true;}else{hearts--;heartedMe=false;}}
   var lc=document.getElementById('likeCount'),hc=document.getElementById('heartCount');
   if(lc)lc.textContent=likes;if(hc)hc.textContent=hearts;
-  document.getElementById('btnLike').className='br'+(likedMe?' reacted':'');
-  document.getElementById('btnHeart').className='br'+(heartedMe?' reacted':'');
-  if(btn){var pop=document.createElement('span');pop.className='react-pop';pop.textContent=emoji;pop.style.cssText='position:absolute;pointer-events:none;font-size:24px;animation:fu 1.1s forwards';var r=btn.getBoundingClientRect(),br=banner.getBoundingClientRect();pop.style.left=(r.left-br.left+r.width/2-12)+'px';pop.style.top=(r.top-br.top-16)+'px';banner.style.position='relative';banner.appendChild(pop);setTimeout(function(){if(pop.parentNode)pop.parentNode.removeChild(pop);},1200);}
+  var bl=document.getElementById('btnLike'),bh=document.getElementById('btnHeart');
+  if(bl)bl.className='br'+(likedMe?' reacted':'');
+  if(bh)bh.className='br'+(heartedMe?' reacted':'');
+  if(btn){var pop=document.createElement('span');pop.style.cssText='position:absolute;pointer-events:none;font-size:24px;animation:fu 1.1s forwards';pop.textContent=emoji;var r=btn.getBoundingClientRect(),br=banner.getBoundingClientRect();pop.style.left=(r.left-br.left+r.width/2-12)+'px';pop.style.top=(r.top-br.top-16)+'px';banner.style.position='relative';banner.appendChild(pop);setTimeout(function(){if(pop.parentNode)pop.parentNode.removeChild(pop);},1200);}
 }
 
 // ── BANNER DINÂMICO ──
@@ -1106,7 +1192,7 @@ function doReact(type){
   if(mostrarFesta){
     el.innerHTML=
       '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:column;align-items:center">'
-        +'<img src="Festa Junina Grupo Pez.jpeg" alt="Arraiá do Grupo Pez — 19 de junho às 19h" style="width:100%;max-width:520px;display:block;border-radius:14px 14px 0 0">'
+        +'<img src="festa-junina.jpeg" alt="Arraiá do Grupo Pez" style="width:100%;max-width:520px;display:block;border-radius:14px 14px 0 0">'
         +'<div style="width:100%;max-width:520px;background:rgba(10,6,30,.92);border-radius:0 0 14px 14px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px">'
           +'<button class="br" id="btnLike" onclick="doReact(\'like\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">👍 <span style="font-size:15px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
           +'<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">❤️ <span style="font-size:15px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
