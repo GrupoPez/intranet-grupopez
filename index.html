@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grupo Pez — Intranet</title>
+<title>Grupo Pez - Intranet</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -12,7 +12,7 @@
 body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:100vh}
 .sb{position:fixed;left:0;top:0;bottom:0;width:230px;background:var(--azul);display:flex;flex-direction:column;z-index:100;transition:transform .3s}
 .sb-logo{padding:26px 22px 22px;border-bottom:1px solid rgba(255,255,255,.1)}
-.sb-logo-name{font-family:var(--ft);font-size:19px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.sb-logo-name{font-family:var(--ft);font-size:19px;font-weight:700;color:#fff}
 .sb-logo-sub{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
 .sb-logo-bar{width:26px;height:3px;background:var(--am);border-radius:2px;margin-top:9px}
 .sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
@@ -29,6 +29,15 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .tb-right{display:flex;align-items:center;gap:8px;position:relative}
 .tb-date{font-size:12px;color:var(--muted)}
 .tb-badge{background:var(--am-c);color:var(--azul);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,209,0,.4)}
+.notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:20px;padding:4px 6px;border-radius:8px}
+.notif-badge{position:absolute;top:-2px;right:-2px;background:#DC2626;color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:none;align-items:center;justify-content:center;padding:0 3px}
+.notif-badge.show{display:flex}
+.notif-panel{display:none;position:absolute;top:46px;right:0;width:300px;background:#fff;border:1px solid var(--borda);border-radius:var(--rl);box-shadow:0 8px 32px rgba(0,45,114,.15);z-index:300;overflow:hidden}
+.notif-panel.open{display:block}
+.notif-header{padding:12px 16px;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between}
+.notif-item{padding:11px 14px;border-bottom:1px solid var(--borda);cursor:pointer;display:flex;gap:9px;align-items:flex-start}
+.notif-item:hover{background:var(--azul-c)}
+.notif-item.unread{background:#F0F7FF}
 .page{display:none;padding:28px;animation:fi .22s ease}
 .page.active{display:block}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -42,10 +51,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .qi{width:42px;height:42px;border-radius:9px;background:var(--azul-c);display:flex;align-items:center;justify-content:center;font-size:20px}
 .qi-am{background:var(--am-c)}
 .ql{font-size:11px;font-weight:500;color:var(--texto);text-align:center}
-.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.st{font-family:var(--ft);font-size:13px;font-weight:700;color:var(--azul);display:flex;align-items:center;gap:7px}
-.st::before{content:'';width:3px;height:14px;background:var(--am);border-radius:2px;display:block}
-.sl{font-size:11px;color:var(--azul-m);text-decoration:none;cursor:pointer}
 .ng{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .nb{background:var(--card);border:1px solid var(--borda);border-radius:var(--rl);overflow:hidden;transition:all .2s;cursor:pointer}
 .nb:hover{box-shadow:var(--shh);transform:translateY(-2px)}
@@ -63,11 +68,10 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .ci{display:flex;gap:10px;align-items:center;padding:9px 11px;border-radius:var(--r);border:1px solid var(--borda)}
 .cd{width:38px;height:38px;border-radius:7px;background:var(--azul);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .cd-n{font-family:var(--ft);font-size:14px;font-weight:700;color:var(--am);line-height:1}
-.cd-m{font-size:8px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.05em}
+.cd-m{font-size:8px;color:rgba(255,255,255,.55);text-transform:uppercase}
 .ci-title{font-size:12px;font-weight:500;color:var(--texto)}
 .ci-sub{font-size:10px;color:var(--muted);margin-top:1px}
 .ph{background:var(--azul);border-radius:var(--rl);padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden}
-.ph::after{content:'';position:absolute;right:-20px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,209,0,.05)}
 .ph-title{font-family:var(--ft);font-size:20px;font-weight:700;color:#fff;margin-bottom:3px}
 .ph-sub{font-size:12px;color:rgba(255,255,255,.48)}
 .cpg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -102,10 +106,10 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .vb{font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--borda);color:var(--muted);cursor:pointer;background:#fff;transition:all .15s;user-select:none}
 .vb:hover{border-color:var(--azul);color:var(--azul)}
 .vb.sel{background:var(--azul-c);color:var(--azul);border-color:var(--azul);font-weight:600}
-.bp{background:var(--azul);color:#fff;border:none;padding:10px 18px;border-radius:var(--r);font-size:12px;font-family:var(--fb);font-weight:500;cursor:pointer;transition:background .15s}
+.bp{background:var(--azul);color:#fff;border:none;padding:10px 18px;border-radius:var(--r);font-size:12px;font-family:var(--fb);font-weight:500;cursor:pointer}
 .bp:hover{background:var(--azul-m)}
 .bp:disabled{opacity:.6;cursor:not-allowed}
-.bg{background:transparent;color:var(--muted);border:1px solid var(--borda);padding:10px 14px;border-radius:var(--r);font-size:12px;font-family:var(--fb);cursor:pointer;transition:all .15s}
+.bg{background:transparent;color:var(--muted);border:1px solid var(--borda);padding:10px 14px;border-radius:var(--r);font-size:12px;font-family:var(--fb);cursor:pointer}
 .bg:hover{border-color:var(--azul);color:var(--azul)}
 .bam{background:var(--am);color:var(--azul);border:none;padding:9px 16px;border-radius:var(--r);font-size:12px;font-family:var(--fb);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .bam:hover{opacity:.85}
@@ -122,7 +126,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .vlp{font-size:10px;font-weight:700;color:var(--azul);background:var(--azul-c);padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:4px}
 .vln{font-size:12px;font-weight:600;color:var(--texto)}
 .vlm{font-size:10px;color:var(--muted);margin-top:2px}
-.sb-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px}
+.sb-bdg{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px}
 .s-pend{background:#FEF9C3;color:#854D0E}
 .s-aprov{background:#D1FAE5;color:#065F46}
 .s-reprov{background:#FEE2E2;color:#991B1B}
@@ -132,30 +136,14 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 .br{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.38);border-radius:99px;padding:10px 22px;font-size:18px;cursor:pointer;color:#fff;font-family:var(--fb);font-weight:700;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,background .15s}
 .br:hover{background:rgba(255,255,255,.22);transform:scale(1.05)}
 .br.reacted{background:rgba(255,209,0,.28);border-color:var(--am)}
-.react-pop{position:absolute;pointer-events:none;font-size:24px;animation:fu 1.1s forwards}
-@keyframes fu{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-65px) scale(1.4)}}
 .upl{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px dashed var(--borda);border-radius:var(--r);cursor:pointer;background:var(--bg);transition:border-color .2s}
 .upl:hover{border-color:var(--azul)}
 .btn-back{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--borda);border-radius:var(--r);padding:7px 14px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:var(--fb);transition:all .15s;margin-bottom:16px}
 .btn-back:hover{border-color:var(--azul);color:var(--azul);background:var(--azul-c)}
-.notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:20px;padding:4px 6px;border-radius:8px;transition:background .15s}
-.notif-btn:hover{background:var(--azul-c)}
-.notif-badge{position:absolute;top:-2px;right:-2px;background:#DC2626;color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:none;align-items:center;justify-content:center;padding:0 3px}
-.notif-badge.show{display:flex}
-.notif-panel{display:none;position:absolute;top:46px;right:0;width:320px;background:#fff;border:1px solid var(--borda);border-radius:var(--rl);box-shadow:0 8px 32px rgba(0,45,114,.15);z-index:300;overflow:hidden}
-.notif-panel.open{display:block}
-.notif-header{padding:12px 16px;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between}
-.notif-title{font-family:var(--ft);font-size:13px;font-weight:700;color:var(--azul)}
-.notif-clear{font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:var(--fb)}
-.notif-clear:hover{color:#DC2626}
-.notif-item{padding:11px 14px;border-bottom:1px solid var(--borda);cursor:pointer;display:flex;gap:9px;align-items:flex-start;transition:background .15s}
-.notif-item:hover{background:var(--azul-c)}
-.notif-item.unread{background:#F0F7FF}
-.notif-item:last-child{border-bottom:none}
 .aniv-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--borda)}
 .aniv-item:last-child{border-bottom:none}
 .aniv-av{width:36px;height:36px;border-radius:50%;color:#fff;font-family:var(--ft);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.aniv-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;flex-shrink:0}
+.aniv-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px}
 .ab-hoje{background:#FEF9C3;color:#854D0E}
 .ab-mes{background:var(--azul-c);color:var(--azul)}
 .ab-anos{background:#D1FAE5;color:#065F46}
@@ -167,10 +155,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
   .cpg,.ng{grid-template-columns:1fr}
   .vg2,.vg3,.fr{grid-template-columns:1fr}
   .page{padding:16px}
-  #page-vagas>div[style*="340px"]{grid-template-columns:1fr!important}
-  #page-enviarnf>div[style*="300px"]{grid-template-columns:1fr!important}
-  #page-solicitarferias>div[style*="300px"]{grid-template-columns:1fr!important}
-  #anivGrid{grid-template-columns:1fr!important}
   .topbar{padding:0 50px 0 14px;height:52px}
   .tb-date{display:none}
 }
@@ -198,18 +182,18 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
   </div>
   <nav class="sb-nav">
     <div class="nl">Menu</div>
-    <a class="ni active" data-page="home"><span class="ni-ic">🏠</span> Início</a>
-    <a class="ni" data-page="noticias"><span class="ni-ic">📢</span> Comunicados</a>
-    <a class="ni" data-page="documentos"><span class="ni-ic">📁</span> Documentos</a>
-    <a class="ni" data-page="calendario"><span class="ni-ic">📅</span> Calendário</a>
-    <a class="ni" data-page="links"><span class="ni-ic">🎓</span> Treinamentos</a>
-    <div class="nl">Gestão</div>
-    <a class="ni" data-page="vagas"><span class="ni-ic">🧑‍💼</span> Abertura de Vaga</a>
+    <a class="ni active" data-page="home"><span class="ni-ic">&#127968;</span> Inicio</a>
+    <a class="ni" data-page="noticias"><span class="ni-ic">&#128226;</span> Comunicados</a>
+    <a class="ni" data-page="documentos"><span class="ni-ic">&#128193;</span> Documentos</a>
+    <a class="ni" data-page="calendario"><span class="ni-ic">&#128197;</span> Calendario</a>
+    <a class="ni" data-page="links"><span class="ni-ic">&#127891;</span> Treinamentos</a>
+    <div class="nl">Gestao</div>
+    <a class="ni" data-page="vagas"><span class="ni-ic">&#129489;&#8205;&#128188;</span> Abertura de Vaga</a>
     <div class="nl">Prestador PJ</div>
-    <a class="ni" data-page="enviarnf"><span class="ni-ic">🧾</span> Enviar Nota Fiscal</a>
-    <a class="ni" data-page="solicitarferias"><span class="ni-ic">🌴</span> Solicitar Férias</a>
+    <a class="ni" data-page="enviarnf"><span class="ni-ic">&#129534;</span> Enviar Nota Fiscal</a>
+    <a class="ni" data-page="solicitarferias"><span class="ni-ic">&#127796;</span> Solicitar Ferias</a>
     <div class="nl">Restrito</div>
-    <a class="ni" data-page="portalrh"><span class="ni-ic">🔐</span> Portal RH</a>
+    <a class="ni" data-page="portalrh"><span class="ni-ic">&#128274;</span> Portal RH</a>
   </nav>
   <div class="sb-user">
     <div class="ua">GP</div>
@@ -220,20 +204,21 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
   </div>
 </aside>
 <div class="ov" id="ov"></div>
-<button class="hbg" id="hbg">☰</button>
+<button class="hbg" id="hbg">&#9776;</button>
+
 <main class="main">
   <div class="topbar">
-    <div class="tb-title" id="tbTitle">Início</div>
+    <div class="tb-title" id="tbTitle">Inicio</div>
     <div class="tb-right">
       <span class="tb-date" id="tbDate"></span>
       <span class="tb-badge">Grupo Pez</span>
-      <button class="notif-btn" id="btnNotif">🔔<span class="notif-badge" id="notifBadge">0</span></button>
+      <button class="notif-btn" id="btnNotif">&#128276;<span class="notif-badge" id="notifBadge">0</span></button>
       <div class="notif-panel" id="notifPanel">
         <div class="notif-header">
-          <span class="notif-title">🔔 Notificações</span>
-          <button class="notif-clear" id="btnNotifClear">Marcar todas como lidas</button>
+          <span style="font-family:var(--ft);font-size:13px;font-weight:700;color:var(--azul)">Notificacoes</span>
+          <button style="font-size:11px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:var(--fb)" id="btnNotifClear">Marcar lidas</button>
         </div>
-        <div id="notifList"><div style="padding:24px;text-align:center;font-size:12px;color:var(--muted)">Nenhuma notificação.</div></div>
+        <div id="notifList"><div style="padding:24px;text-align:center;font-size:12px;color:var(--muted)">Nenhuma notificacao.</div></div>
       </div>
     </div>
   </div>
@@ -242,43 +227,45 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
   <div class="page active" id="page-home">
     <div id="bannerDinamico" style="margin-bottom:24px"></div>
     <a href="Informativo Grupo PEZ (2026).pdf" target="_blank" style="text-decoration:none;display:block;margin-bottom:24px">
-      <div style="background:linear-gradient(135deg,var(--azul),var(--azul-m));border-radius:var(--rl);padding:20px 28px;display:flex;align-items:center;gap:20px;box-shadow:var(--shh);transition:transform .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-        <div style="background:#fff;border-radius:9px;width:64px;height:80px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 4px 14px rgba(0,0,0,.18)">
-          <div style="font-size:26px">📰</div>
-          <div style="font-size:7px;font-weight:700;color:var(--azul);text-align:center;letter-spacing:.04em;line-height:1.3">GRUPO<br>PEZ</div>
+      <div style="background:linear-gradient(135deg,var(--azul),var(--azul-m));border-radius:var(--rl);padding:20px 28px;display:flex;align-items:center;gap:20px;box-shadow:var(--shh)">
+        <div style="background:#fff;border-radius:9px;width:64px;height:80px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+          <div style="font-size:26px">&#128240;</div>
+          <div style="font-size:7px;font-weight:700;color:var(--azul);text-align:center;line-height:1.3">GRUPO<br>PEZ</div>
         </div>
         <div style="flex:1">
-          <div style="font-size:10px;font-weight:700;color:var(--am);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">📢 Nova edição disponível</div>
-          <div style="font-family:var(--ft);font-size:18px;font-weight:700;color:#fff;margin-bottom:3px">Informativo Grupo Pez — Ed. 04 · 2026</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.62);line-height:1.5">Segurança nas obras, depoimento do Julio, benefícios, aniversariantes de maio e muito mais.</div>
+          <div style="font-size:10px;font-weight:700;color:var(--am);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Nova edicao disponivel</div>
+          <div style="font-family:var(--ft);font-size:18px;font-weight:700;color:#fff;margin-bottom:3px">Informativo Grupo Pez - Ed. 04 - 2026</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.62)">Seguranca nas obras, depoimento do Julio, beneficios, aniversariantes de maio e muito mais.</div>
         </div>
-        <div style="flex-shrink:0"><div style="background:var(--am);color:var(--azul);font-size:12px;font-weight:700;padding:9px 20px;border-radius:8px;white-space:nowrap">📖 Ler agora</div></div>
+        <div style="flex-shrink:0"><div style="background:var(--am);color:var(--azul);font-size:12px;font-weight:700;padding:9px 20px;border-radius:8px;white-space:nowrap">Ler agora</div></div>
       </div>
     </a>
-    <div class="sh"><div class="st">Acesso rápido</div></div>
-    <div class="qg">
-      <div class="qc" data-goto="noticias"><div class="qi">📢</div><div class="ql">Comunicados</div></div>
-      <div class="qc" data-goto="documentos"><div class="qi">📁</div><div class="ql">Documentos</div></div>
-      <div class="qc" data-goto="vagas"><div class="qi qi-am">🧑‍💼</div><div class="ql">Abrir Vaga</div></div>
-      <div class="qc" data-goto="links"><div class="qi">🎓</div><div class="ql">Treinamentos</div></div>
+    <div style="font-family:var(--ft);font-size:13px;font-weight:700;color:var(--azul);display:flex;align-items:center;gap:7px;margin-bottom:12px">
+      <span style="width:3px;height:14px;background:var(--am);border-radius:2px;display:block"></span>Acesso rapido
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px" id="anivGrid">
+    <div class="qg">
+      <div class="qc" data-goto="noticias"><div class="qi">&#128226;</div><div class="ql">Comunicados</div></div>
+      <div class="qc" data-goto="documentos"><div class="qi">&#128193;</div><div class="ql">Documentos</div></div>
+      <div class="qc" data-goto="vagas"><div class="qi qi-am">&#129489;</div><div class="ql">Abrir Vaga</div></div>
+      <div class="qc" data-goto="links"><div class="qi">&#127891;</div><div class="ql">Treinamentos</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px">
       <div class="card">
-        <div class="ch"><div class="ch-title">🎂 Aniversariantes do Mês</div><span style="font-size:10px;color:var(--muted)" id="anivMesLabel"></span></div>
-        <div class="cb" id="anivMesList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">⏳ Carregando...</div></div>
+        <div class="ch"><div class="ch-title">Aniversariantes do Mes</div><span style="font-size:10px;color:var(--muted)" id="anivMesLabel"></span></div>
+        <div class="cb" id="anivMesList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">Carregando...</div></div>
       </div>
       <div class="card">
-        <div class="ch"><div class="ch-title">🏆 Aniversários de Empresa</div><span style="font-size:10px;color:var(--muted)" id="anivEmpLabel"></span></div>
-        <div class="cb" id="anivEmpList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">⏳ Carregando...</div></div>
+        <div class="ch"><div class="ch-title">Aniversarios de Empresa</div><span style="font-size:10px;color:var(--muted)" id="anivEmpLabel"></span></div>
+        <div class="cb" id="anivEmpList"><div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">Carregando...</div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px">
       <div class="card">
-        <div class="ch"><div class="ch-title">📢 Comunicados recentes</div><a class="sl" data-goto="noticias">Ver todos</a></div>
+        <div class="ch"><div class="ch-title">Comunicados recentes</div><a class="sl" data-goto="noticias" style="font-size:11px;color:var(--azul-m);text-decoration:none;cursor:pointer">Ver todos</a></div>
         <div class="cb" id="homeNewsList"></div>
       </div>
       <div class="card">
-        <div class="ch"><div class="ch-title">📅 Próximos eventos</div></div>
+        <div class="ch"><div class="ch-title">Proximos eventos</div></div>
         <div class="cb"><div class="cl" id="homeCalList"></div></div>
       </div>
     </div>
@@ -286,40 +273,40 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
   <!-- COMUNICADOS -->
   <div class="page" id="page-noticias">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">📢 Comunicados e Notícias</div><div class="ph-sub">Avisos, novidades e informações internas</div></div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="bam" id="btnNovaNoticia">✏️ Novo comunicado</button></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Comunicados e Noticias</div><div class="ph-sub">Avisos, novidades e informacoes internas</div></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="bam" id="btnNovaNoticia">Novo comunicado</button></div>
     <div class="ng" id="newsGrid"></div>
   </div>
 
   <!-- DOCUMENTOS -->
   <div class="page" id="page-documentos">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">📁 Documentos e Políticas</div><div class="ph-sub">Arquivos, contratos e políticas internas</div></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Documentos e Politicas</div><div class="ph-sub">Arquivos, contratos e politicas internas</div></div>
     <div style="background:var(--card);border:2px dashed var(--borda);border-radius:var(--rl);padding:56px 36px;text-align:center">
-      <div style="font-size:48px;margin-bottom:14px;opacity:.35">📁</div>
+      <div style="font-size:48px;margin-bottom:14px;opacity:.35">&#128193;</div>
       <div style="font-family:var(--ft);font-size:17px;font-weight:700;color:var(--azul);margin-bottom:9px;opacity:.65">Em breve: Documentos Compartilhados</div>
-      <div style="font-size:13px;color:var(--muted);max-width:420px;margin:0 auto;line-height:1.7">Estamos organizando um espaço centralizado com políticas, contratos, manuais e formulários do Grupo Pez.</div>
-      <div style="display:inline-flex;align-items:center;gap:7px;background:var(--azul-c);border:1px solid rgba(0,45,114,.13);border-radius:99px;padding:7px 18px;margin-top:20px;font-size:11px;font-weight:700;color:var(--azul)">🔒 Módulo em preparação</div>
+      <div style="font-size:13px;color:var(--muted);max-width:420px;margin:0 auto;line-height:1.7">Estamos organizando um espaco centralizado com politicas, contratos, manuais e formularios do Grupo Pez.</div>
+      <div style="display:inline-flex;align-items:center;gap:7px;background:var(--azul-c);border:1px solid rgba(0,45,114,.13);border-radius:99px;padding:7px 18px;margin-top:20px;font-size:11px;font-weight:700;color:var(--azul)">Modulo em preparacao</div>
     </div>
   </div>
 
-  <!-- CALENDÁRIO -->
+  <!-- CALENDARIO -->
   <div class="page" id="page-calendario">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">📅 Calendário da Empresa</div><div class="ph-sub">Eventos, reuniões e datas importantes</div></div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="bam" id="btnNovoEvento">➕ Novo evento</button></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Calendario da Empresa</div><div class="ph-sub">Eventos, reunioes e datas importantes</div></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="bam" id="btnNovoEvento">Novo evento</button></div>
     <div class="cpg">
       <div class="card">
         <div class="ch">
-          <button onclick="calNavMes(-1)" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--azul);padding:0 4px">‹</button>
-          <div class="ch-title">📆 <span id="calMesAno"></span></div>
-          <button onclick="calNavMes(1)" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--azul);padding:0 4px">›</button>
+          <button onclick="calNavMes(-1)" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--azul);padding:0 4px">&#8249;</button>
+          <div class="ch-title"><span id="calMesAno"></span></div>
+          <button onclick="calNavMes(1)" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--azul);padding:0 4px">&#8250;</button>
         </div>
         <div class="cb"><div class="mg" id="calGrid"></div></div>
       </div>
       <div class="card">
-        <div class="ch"><div class="ch-title">🗓 Todos os eventos</div></div>
+        <div class="ch"><div class="ch-title">Todos os eventos</div></div>
         <div class="cb"><div id="fullCalList"></div></div>
       </div>
     </div>
@@ -327,95 +314,94 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
   <!-- TREINAMENTOS -->
   <div class="page" id="page-links">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">🎓 Treinamentos</div><div class="ph-sub">Materiais e guias de capacitação por área</div></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Treinamentos</div><div class="ph-sub">Materiais e guias de capacitacao por area</div></div>
     <div style="background:var(--card);border:2px dashed var(--borda);border-radius:var(--rl);padding:56px 36px;text-align:center">
-      <div style="font-size:48px;margin-bottom:14px;opacity:.35">🎓</div>
+      <div style="font-size:48px;margin-bottom:14px;opacity:.35">&#127891;</div>
       <div style="font-family:var(--ft);font-size:17px;font-weight:700;color:var(--azul);margin-bottom:9px;opacity:.65">Em breve: Trilhas de Treinamento</div>
-      <div style="font-size:13px;color:var(--muted);max-width:460px;margin:0 auto;line-height:1.7">Estamos preparando trilhas de capacitação para cada área — RH, Financeiro, Engenharia, Compras e mais.</div>
-      <div style="display:inline-flex;align-items:center;gap:7px;background:var(--am-c);border:1px solid rgba(255,209,0,.38);border-radius:99px;padding:7px 18px;margin-top:20px;font-size:11px;font-weight:700;color:var(--azul)">⏳ Conteúdo em desenvolvimento</div>
+      <div style="font-size:13px;color:var(--muted);max-width:460px;margin:0 auto;line-height:1.7">Estamos preparando trilhas de capacitacao para cada area: RH, Financeiro, Engenharia, Compras e mais.</div>
+      <div style="display:inline-flex;align-items:center;gap:7px;background:var(--am-c);border:1px solid rgba(255,209,0,.38);border-radius:99px;padding:7px 18px;margin-top:20px;font-size:11px;font-weight:700;color:var(--azul)">Conteudo em desenvolvimento</div>
     </div>
   </div>
 
   <!-- VAGAS -->
   <div class="page" id="page-vagas">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">🧑‍💼 Solicitação de Abertura de Vaga</div><div class="ph-sub">Preencha o formulário — o RH será notificado automaticamente</div></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Solicitacao de Abertura de Vaga</div><div class="ph-sub">Preencha o formulario - o RH sera notificado automaticamente</div></div>
     <div style="display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start">
       <div class="card"><div class="cb" style="padding:22px">
         <div style="margin-bottom:18px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:11px;color:var(--muted)">Preenchimento</span><span style="font-size:11px;color:var(--muted)" id="vProgressTxt">0 de 8 campos obrigatórios</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:11px;color:var(--muted)">Preenchimento</span><span style="font-size:11px;color:var(--muted)" id="vProgressTxt">0 de 8</span></div>
           <div style="background:var(--borda);border-radius:99px;height:3px"><div id="vProgressBar" style="background:var(--azul);height:3px;border-radius:99px;width:0%;transition:width .3s"></div></div>
         </div>
         <div id="vFormBody">
-          <div class="vs"><div class="vsh"><span class="vsh-ic">🏢</span><span class="vsh-t">Informações gerais</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#127970;</span><span class="vsh-t">Informacoes gerais</span></div>
             <div class="vg2" style="margin-bottom:12px">
-              <div class="vf"><label class="vl req">Cargo / Função</label><input class="fi" id="vCargo" placeholder="Ex: Analista de Marketing"></div>
-              <div class="vf"><label class="vl req">Departamento</label><select class="fi" id="vDepto"><option value="">Selecionar...</option><option>Administrativo</option><option>Comercial / Vendas</option><option>Financeiro</option><option>Jurídico</option><option>Logística</option><option>Marketing</option><option>Operações</option><option>RH / Pessoas</option><option>Tecnologia</option><option>Outro</option></select></div>
+              <div class="vf"><label class="vl req">Cargo / Funcao</label><input class="fi" id="vCargo" placeholder="Ex: Analista de Marketing"></div>
+              <div class="vf"><label class="vl req">Departamento</label><select class="fi" id="vDepto"><option value="">Selecionar...</option><option>Administrativo</option><option>Comercial / Vendas</option><option>Financeiro</option><option>Juridico</option><option>Logistica</option><option>Marketing</option><option>Operacoes</option><option>RH / Pessoas</option><option>Tecnologia</option><option>Outro</option></select></div>
             </div>
             <div class="vg3">
-              <div class="vf"><label class="vl req">Nº de vagas</label><input class="fi" id="vNumVagas" type="number" min="1" value="1"></div>
-              <div class="vf"><label class="vl req">Tipo</label><select class="fi" id="vTipoContrat"><option value="">Selecionar...</option><option>CLT</option><option>PJ</option><option>Estágio</option><option>Temporário</option><option>Freelancer</option></select></div>
+              <div class="vf"><label class="vl req">Nr vagas</label><input class="fi" id="vNumVagas" type="number" min="1" value="1"></div>
+              <div class="vf"><label class="vl req">Tipo</label><select class="fi" id="vTipoContrat"><option value="">Selecionar...</option><option>CLT</option><option>PJ</option><option>Estagio</option><option>Temporario</option><option>Freelancer</option></select></div>
               <div class="vf"><label class="vl req">Prazo</label><input class="fi" id="vPrazo" type="date"></div>
             </div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">💼</span><span class="vsh-t">Perfil da vaga</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128188;</span><span class="vsh-t">Perfil da vaga</span></div>
             <div class="vg2" style="margin-bottom:12px">
-              <div class="vf"><label class="vl">Faixa salarial</label><input class="fi" id="vSalario" placeholder="Ex: R$ 4.000 – R$ 6.000"></div>
-              <div class="vf"><label class="vl">Nível</label><select class="fi" id="vNivel"><option value="">Selecionar...</option><option>Júnior (0–2 anos)</option><option>Pleno (2–5 anos)</option><option>Sênior (5+ anos)</option><option>Especialista</option><option>Gerência / Liderança</option></select></div>
+              <div class="vf"><label class="vl">Faixa salarial</label><input class="fi" id="vSalario" placeholder="Ex: R$ 4.000 - R$ 6.000"></div>
+              <div class="vf"><label class="vl">Nivel</label><select class="fi" id="vNivel"><option value="">Selecionar...</option><option>Junior</option><option>Pleno</option><option>Senior</option><option>Especialista</option><option>Gerencia / Lideranca</option></select></div>
             </div>
             <div class="vf" style="margin-bottom:12px"><label class="vl">Modalidade</label>
               <div class="vps" id="vModalGroup">
                 <span class="vp" data-group="vModalGroup" data-val="Presencial">Presencial</span>
-                <span class="vp" data-group="vModalGroup" data-val="Híbrido">Híbrido</span>
+                <span class="vp" data-group="vModalGroup" data-val="Hibrido">Hibrido</span>
                 <span class="vp" data-group="vModalGroup" data-val="Remoto">Remoto</span>
               </div>
             </div>
-            <div class="vf" style="margin-bottom:12px"><label class="vl req">Responsabilidades</label><textarea class="fi" id="vResp" rows="3" placeholder="Descreva as atividades e entregas esperadas..."></textarea></div>
-            <div class="vf"><label class="vl">Habilidades desejadas</label>
-              <div style="font-size:10px;color:var(--muted);margin-bottom:5px">Clique para selecionar</div>
-              <div class="vbs" id="vSkills"><span class="vb">Comunicação</span><span class="vb">Liderança</span><span class="vb">Trabalho em equipe</span><span class="vb">Excel / Planilhas</span><span class="vb">Power BI</span><span class="vb">Inglês</span><span class="vb">Espanhol</span><span class="vb">Resolução de problemas</span><span class="vb">Negociação</span><span class="vb">Orientação a resultados</span><span class="vb">Atendimento ao cliente</span><span class="vb">Gestão de projetos</span></div>
+            <div class="vf" style="margin-bottom:12px"><label class="vl req">Responsabilidades</label><textarea class="fi" id="vResp" rows="3" placeholder="Descreva as atividades..."></textarea></div>
+            <div class="vf"><label class="vl">Habilidades</label>
+              <div class="vbs" id="vSkills"><span class="vb">Comunicacao</span><span class="vb">Lideranca</span><span class="vb">Trabalho em equipe</span><span class="vb">Excel</span><span class="vb">Power BI</span><span class="vb">Ingles</span><span class="vb">Espanhol</span><span class="vb">Negociacao</span><span class="vb">Gestao de projetos</span></div>
             </div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">🚩</span><span class="vsh-t">Justificativa e urgência</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128681;</span><span class="vsh-t">Justificativa e urgencia</span></div>
             <div class="vg2" style="margin-bottom:12px">
-              <div class="vf"><label class="vl req">Motivo</label><select class="fi" id="vMotivo"><option value="">Selecionar...</option><option>Nova vaga / expansão</option><option>Substituição de colaborador</option><option>Crescimento de equipe</option><option>Projeto específico</option><option>Cobertura de licença</option></select></div>
-              <div class="vf"><label class="vl req">Urgência</label>
+              <div class="vf"><label class="vl req">Motivo</label><select class="fi" id="vMotivo"><option value="">Selecionar...</option><option>Nova vaga / expansao</option><option>Substituicao</option><option>Crescimento de equipe</option><option>Projeto especifico</option><option>Cobertura de licenca</option></select></div>
+              <div class="vf"><label class="vl req">Urgencia</label>
                 <div class="vps" id="vUrgGroup" style="margin-top:5px">
                   <span class="vp pg" data-group="vUrgGroup" data-val="Baixa">Baixa</span>
-                  <span class="vp py" data-group="vUrgGroup" data-val="Média">Média</span>
+                  <span class="vp py" data-group="vUrgGroup" data-val="Media">Media</span>
                   <span class="vp pr" data-group="vUrgGroup" data-val="Alta">Alta</span>
                 </div>
               </div>
             </div>
-            <div class="vf"><label class="vl">Justificativa adicional</label><textarea class="fi" id="vJustif" rows="2" placeholder="Contexto extra para o RH..."></textarea></div>
+            <div class="vf"><label class="vl">Justificativa</label><textarea class="fi" id="vJustif" rows="2" placeholder="Contexto extra..."></textarea></div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">👤</span><span class="vsh-t">Solicitante</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128100;</span><span class="vsh-t">Solicitante</span></div>
             <div class="vg2" style="margin-bottom:12px">
               <div class="vf"><label class="vl req">Nome</label><input class="fi" id="vSolicit" placeholder="Nome completo"></div>
               <div class="vf"><label class="vl req">E-mail</label><input class="fi" type="email" id="vEmail" placeholder="email@empresa.com.br"></div>
             </div>
             <div class="vg2">
               <div class="vf"><label class="vl">Gestor</label><input class="fi" id="vGestor" placeholder="Nome do gestor"></div>
-              <div class="vf"><label class="vl">E-mail do gestor</label><input class="fi" type="email" id="vEmailGestor" placeholder="gestor@empresa.com.br"></div>
+              <div class="vf"><label class="vl">E-mail gestor</label><input class="fi" type="email" id="vEmailGestor" placeholder="gestor@empresa.com.br"></div>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:6px">
             <button class="bg" id="btnVClear">Limpar</button>
-            <button class="bp" id="btnVSubmit">📨 Enviar para o RH</button>
+            <button class="bp" id="btnVSubmit">Enviar para o RH</button>
           </div>
         </div>
         <div id="vSuccess" style="display:none;text-align:center;padding:36px 16px">
-          <div style="font-size:44px;margin-bottom:10px">✅</div>
-          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">Solicitação enviada!</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">O RH foi notificado em <strong>RH@concretaeng.com.br</strong></div>
+          <div style="font-size:44px;margin-bottom:10px">&#10003;</div>
+          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">Solicitacao enviada!</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">O RH foi notificado em RH@concretaeng.com.br</div>
           <div style="font-size:18px;font-weight:700;color:var(--azul);background:var(--azul-c);border:1px solid var(--borda);border-radius:9px;padding:9px 22px;display:inline-block;margin-bottom:18px" id="vProtocol"></div>
-          <br><button class="bg" id="btnVNew">+ Nova solicitação</button>
+          <br><button class="bg" id="btnVNew">+ Nova solicitacao</button>
         </div>
       </div></div>
       <div class="card" style="position:sticky;top:72px">
-        <div class="ch"><div class="ch-title">📋 Log de solicitações</div><span style="font-size:10px;color:var(--muted)" id="vLogCount">0 envios</span></div>
-        <div id="vLogEmpty" style="padding:28px;text-align:center;color:var(--muted);font-size:12px">Nenhuma solicitação ainda.</div>
+        <div class="ch"><div class="ch-title">Log de solicitacoes</div><span style="font-size:10px;color:var(--muted)" id="vLogCount">0 envios</span></div>
+        <div id="vLogEmpty" style="padding:28px;text-align:center;color:var(--muted);font-size:12px">Nenhuma solicitacao ainda.</div>
         <div id="vLogList" style="max-height:560px;overflow-y:auto"></div>
       </div>
     </div>
@@ -423,139 +409,132 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
   <!-- ENVIAR NF -->
   <div class="page" id="page-enviarnf">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">🧾 Enviar Nota Fiscal</div><div class="ph-sub">Envie sua NF mensal — o RH será notificado automaticamente</div></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Enviar Nota Fiscal</div><div class="ph-sub">Envie sua NF mensal - o RH sera notificado automaticamente</div></div>
     <div style="display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start">
       <div class="card"><div class="cb" style="padding:22px">
         <div id="nfFormBody">
-          <div class="vs"><div class="vsh"><span class="vsh-ic">👤</span><span class="vsh-t">Dados do Prestador</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128100;</span><span class="vsh-t">Dados do Prestador</span></div>
             <div class="vg2" style="margin-bottom:12px">
               <div class="vf"><label class="vl req">Nome completo</label><input class="fi" id="nfNome" placeholder="Seu nome completo"></div>
               <div class="vf"><label class="vl req">CNPJ</label><input class="fi" id="nfCnpj" placeholder="00.000.000/0001-00" maxlength="18"></div>
             </div>
             <div class="vg2">
               <div class="vf"><label class="vl req">E-mail</label><input class="fi" type="email" id="nfEmail" placeholder="seu@email.com.br"></div>
-              <div class="vf"><label class="vl req">Empresa / Obra</label><input class="fi" id="nfObra" placeholder="Ex: Concreta — Obra Bauru"></div>
+              <div class="vf"><label class="vl req">Empresa / Obra</label><input class="fi" id="nfObra" placeholder="Ex: Concreta - Obra Bauru"></div>
             </div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">🧾</span><span class="vsh-t">Dados da Nota Fiscal</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#129534;</span><span class="vsh-t">Dados da Nota Fiscal</span></div>
             <div class="vg3" style="margin-bottom:12px">
-              <div class="vf"><label class="vl req">Número da NF</label><input class="fi" id="nfNumero" placeholder="Ex: 000123"></div>
-              <div class="vf"><label class="vl req">Competência</label><input class="fi" id="nfCompetencia" type="month"></div>
-              <div class="vf"><label class="vl req">Valor (R$)</label><input class="fi" id="nfValor" placeholder="Ex: 5.000,00"></div>
+              <div class="vf"><label class="vl req">Numero NF</label><input class="fi" id="nfNumero" placeholder="000123"></div>
+              <div class="vf"><label class="vl req">Competencia</label><input class="fi" id="nfCompetencia" type="month"></div>
+              <div class="vf"><label class="vl req">Valor (R$)</label><input class="fi" id="nfValor" placeholder="5.000,00"></div>
             </div>
-            <div class="vf"><label class="vl">Descrição do serviço</label><textarea class="fi" id="nfDescricao" rows="2" placeholder="Descreva brevemente o serviço prestado..."></textarea></div>
+            <div class="vf"><label class="vl">Descricao</label><textarea class="fi" id="nfDescricao" rows="2" placeholder="Servico prestado..."></textarea></div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">⚠️</span><span class="vsh-t">NF Cancelada?</span></div>
-            <div style="background:linear-gradient(135deg,#FEF9C3,var(--am-c));border:2px solid #FDE047;border-radius:9px;padding:14px 16px;display:flex;gap:12px">
-              <div style="font-size:22px;flex-shrink:0">🚨</div>
-              <div>
-                <div style="font-family:var(--ft);font-size:12px;font-weight:700;color:#854D0E;margin-bottom:5px">Possui alguma NF cancelada este mês?</div>
-                <div style="font-size:11px;color:#92400E;line-height:1.7">Caso tenha emitido e posteriormente <strong>cancelado</strong> alguma NF, informe abaixo.</div>
-                <div style="margin-top:10px;display:flex;align-items:center;gap:7px"><input type="checkbox" id="nfCancelada" style="width:15px;height:15px;cursor:pointer;accent-color:var(--azul)"><label for="nfCancelada" style="font-size:12px;font-weight:700;color:#854D0E;cursor:pointer">Sim, tive NF cancelada este mês</label></div>
-                <div id="nfCanceladaBox" style="display:none;margin-top:10px"><label class="vl" style="color:#854D0E">Número(s) e motivo(s)</label><textarea class="fi" id="nfCanceladaInfo" rows="2" placeholder="Ex: NF 000120 cancelada por erro no valor..." style="border-color:#FDE047;background:#fff"></textarea></div>
-              </div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#9888;</span><span class="vsh-t">NF Cancelada?</span></div>
+            <div style="background:var(--am-c);border:2px solid #FDE047;border-radius:9px;padding:14px 16px">
+              <div style="font-size:12px;font-weight:700;color:#854D0E;margin-bottom:5px">Possui alguma NF cancelada este mes?</div>
+              <div style="font-size:11px;color:#92400E;line-height:1.7">Caso tenha cancelado alguma NF, informe abaixo.</div>
+              <div style="margin-top:10px;display:flex;align-items:center;gap:7px"><input type="checkbox" id="nfCancelada" style="width:15px;height:15px;cursor:pointer"><label for="nfCancelada" style="font-size:12px;font-weight:700;color:#854D0E;cursor:pointer">Sim, tive NF cancelada</label></div>
+              <div id="nfCanceladaBox" style="display:none;margin-top:10px"><label class="vl">Numero(s) e motivo(s)</label><textarea class="fi" id="nfCanceladaInfo" rows="2" placeholder="NF 000120 cancelada por..."></textarea></div>
             </div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">📎</span><span class="vsh-t">Anexos — PDF e XML</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128206;</span><span class="vsh-t">Anexos PDF e XML</span></div>
             <div style="display:flex;flex-direction:column;gap:10px">
-              <div class="vf"><label class="vl req">PDF da Nota Fiscal</label>
-                <label class="upl" id="labelPDF"><span style="font-size:22px">📄</span><div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelPDFTxt">Clique para selecionar o PDF</div><div style="font-size:10px;color:var(--muted)">Somente .pdf</div></div><input type="file" id="nfFilePDF" accept=".pdf" style="display:none"></label>
+              <div class="vf"><label class="vl req">PDF da NF</label>
+                <label class="upl" id="labelPDF"><span style="font-size:22px">&#128196;</span><div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelPDFTxt">Selecionar PDF</div><div style="font-size:10px;color:var(--muted)">Somente .pdf</div></div><input type="file" id="nfFilePDF" accept=".pdf" style="display:none"></label>
               </div>
-              <div class="vf"><label class="vl req">XML da Nota Fiscal</label>
-                <label class="upl" id="labelXML"><span style="font-size:22px">🗂️</span><div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelXMLTxt">Clique para selecionar o XML</div><div style="font-size:10px;color:var(--muted)">Somente .xml</div></div><input type="file" id="nfFileXML" accept=".xml" style="display:none"></label>
+              <div class="vf"><label class="vl req">XML da NF</label>
+                <label class="upl" id="labelXML"><span style="font-size:22px">&#128196;</span><div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelXMLTxt">Selecionar XML</div><div style="font-size:10px;color:var(--muted)">Somente .xml</div></div><input type="file" id="nfFileXML" accept=".xml" style="display:none"></label>
               </div>
-              <div style="background:var(--am-c);border:1px solid rgba(255,209,0,.4);border-radius:8px;padding:9px 12px;font-size:11px;color:#854D0E">💡 Prefere enviar por link? Informe abaixo o Google Drive / WeTransfer.</div>
-              <div class="vf"><label class="vl">Link alternativo</label><input class="fi" id="nfLink" placeholder="https://drive.google.com/..."></div>
+              <div class="vf"><label class="vl">Link alternativo (Drive)</label><input class="fi" id="nfLink" placeholder="https://drive.google.com/..."></div>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:6px">
             <button class="bg" id="btnNFClear">Limpar</button>
-            <button class="bp" id="btnNFSubmit">📨 Enviar NF ao RH</button>
+            <button class="bp" id="btnNFSubmit">Enviar NF ao RH</button>
           </div>
         </div>
         <div id="nfSucesso" style="display:none;text-align:center;padding:36px 16px">
-          <div style="font-size:44px;margin-bottom:10px">✅</div>
-          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">NF enviada com sucesso!</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">RH notificado em <strong>RH@concretaeng.com.br</strong></div>
-          <div style="font-size:18px;font-weight:700;color:var(--azul);background:var(--azul-c);border:1px solid var(--borda);border-radius:9px;padding:9px 22px;display:inline-block;margin-bottom:18px" id="nfProtocol"></div>
+          <div style="font-size:44px;margin-bottom:10px">&#10003;</div>
+          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">NF enviada!</div>
+          <div style="font-size:18px;font-weight:700;color:var(--azul);background:var(--azul-c);border-radius:9px;padding:9px 22px;display:inline-block;margin-bottom:18px" id="nfProtocol"></div>
           <br><button class="bg" id="btnNFNew">+ Enviar nova NF</button>
         </div>
       </div></div>
       <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card"><div class="ch"><div class="ch-title">📋 Como funciona</div></div>
+        <div class="card"><div class="ch"><div class="ch-title">Como funciona</div></div>
           <div class="cb" style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Preencha seus dados e os da NF</div></div>
-            <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Upload do PDF e XML ou link do Drive</div></div>
-            <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Clique em Enviar — RH notificado automaticamente</div></div>
-            <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--am);color:var(--azul);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Guarde o protocolo para acompanhamento</div></div>
+            <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Upload do PDF e XML</div></div>
+            <div style="display:flex;gap:9px"><div style="width:22px;height:22px;border-radius:50%;background:var(--azul);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Clique Enviar - RH notificado</div></div>
           </div>
         </div>
-        <div class="card"><div class="ch"><div class="ch-title">📅 Prazo de envio</div></div>
-          <div class="cb"><div style="background:var(--am-c);border-radius:8px;padding:10px;text-align:center"><div style="font-size:26px;font-weight:700;color:var(--azul);font-family:var(--ft)">Todo dia 20</div><div style="font-size:11px;color:var(--muted);margin-top:2px">de cada mês</div></div><div style="font-size:11px;color:var(--muted);margin-top:9px;line-height:1.6">NFs recebidas após o prazo entrarão no ciclo do mês seguinte.</div></div>
+        <div class="card"><div class="ch"><div class="ch-title">Prazo de envio</div></div>
+          <div class="cb"><div style="background:var(--am-c);border-radius:8px;padding:10px;text-align:center"><div style="font-size:26px;font-weight:700;color:var(--azul);font-family:var(--ft)">Todo dia 20</div><div style="font-size:11px;color:var(--muted);margin-top:2px">de cada mes</div></div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SOLICITAR FÉRIAS -->
+  <!-- FERIAS -->
   <div class="page" id="page-solicitarferias">
-    <button class="btn-back" onclick="nav('home')">← Voltar ao início</button>
-    <div class="ph"><div class="ph-title">🌴 Solicitar Férias</div><div class="ph-sub">Preencha o formulário — o RH receberá sua solicitação para aprovação</div></div>
+    <button class="btn-back" onclick="nav('home')">&#8592; Voltar</button>
+    <div class="ph"><div class="ph-title">Solicitar Ferias</div><div class="ph-sub">Preencha o formulario - o RH recebera para aprovacao</div></div>
     <div style="display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start">
       <div class="card"><div class="cb" style="padding:22px">
         <div id="feriasPJFormBody">
-          <div class="vs"><div class="vsh"><span class="vsh-ic">👤</span><span class="vsh-t">Dados do Colaborador</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128100;</span><span class="vsh-t">Dados do Colaborador</span></div>
             <div class="vg2" style="margin-bottom:12px">
-              <div class="vf"><label class="vl req">Nome completo</label><input class="fi" id="fpNome" placeholder="Seu nome completo"></div>
+              <div class="vf"><label class="vl req">Nome completo</label><input class="fi" id="fpNome" placeholder="Seu nome"></div>
               <div class="vf"><label class="vl req">E-mail</label><input class="fi" type="email" id="fpEmail" placeholder="seu@email.com.br"></div>
             </div>
             <div class="vg2">
-              <div class="vf"><label class="vl req">Setor / Obra</label><input class="fi" id="fpSetor" placeholder="Ex: Engenharia — Obra Bauru"></div>
-              <div class="vf"><label class="vl req">Nome do Responsável</label><input class="fi" id="fpResponsavel" placeholder="Nome do seu gestor"></div>
+              <div class="vf"><label class="vl req">Setor / Obra</label><input class="fi" id="fpSetor" placeholder="Ex: Obra Bauru"></div>
+              <div class="vf"><label class="vl req">Responsavel</label><input class="fi" id="fpResponsavel" placeholder="Nome do gestor"></div>
             </div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">📅</span><span class="vsh-t">Período solicitado</span></div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128197;</span><span class="vsh-t">Periodo solicitado</span></div>
             <div class="vg3" style="margin-bottom:12px">
-              <div class="vf"><label class="vl req">Data de início</label><input class="fi" id="fpInicio" type="date" oninput="calcDiasFP()"></div>
-              <div class="vf"><label class="vl req">Data de fim</label><input class="fi" id="fpFim" type="date" oninput="calcDiasFP()"></div>
-              <div class="vf"><label class="vl">Dias</label><div class="fi" id="fpDias" style="background:var(--azul-c);font-weight:700;color:var(--azul);text-align:center;font-size:16px">—</div></div>
+              <div class="vf"><label class="vl req">Inicio</label><input class="fi" id="fpInicio" type="date" oninput="calcDiasFP()"></div>
+              <div class="vf"><label class="vl req">Fim</label><input class="fi" id="fpFim" type="date" oninput="calcDiasFP()"></div>
+              <div class="vf"><label class="vl">Dias</label><div class="fi" id="fpDias" style="background:var(--azul-c);font-weight:700;color:var(--azul);text-align:center;font-size:16px">-</div></div>
             </div>
-            <div class="vf"><label class="vl">Observações</label><textarea class="fi" id="fpObs" rows="2" placeholder="Informação adicional..."></textarea></div>
+            <div class="vf"><label class="vl">Observacoes</label><textarea class="fi" id="fpObs" rows="2" placeholder="Info adicional..."></textarea></div>
           </div>
-          <div class="vs"><div class="vsh"><span class="vsh-ic">📎</span><span class="vsh-t">Autorização do Responsável</span></div>
-            <div style="background:#F0FDF4;border:1.5px solid #6EE7B7;border-radius:9px;padding:10px 14px;margin-bottom:10px;font-size:11px;color:#065F46;line-height:1.7">✅ <strong>Obrigatório:</strong> Anexe o documento de autorização assinado (PDF, JPG ou PNG).</div>
+          <div class="vs"><div class="vsh"><span class="vsh-ic">&#128206;</span><span class="vsh-t">Autorizacao do Responsavel</span></div>
+            <div style="background:#F0FDF4;border:1.5px solid #6EE7B7;border-radius:9px;padding:10px 14px;margin-bottom:10px;font-size:11px;color:#065F46">Obrigatorio: Anexe o documento assinado pelo responsavel.</div>
             <label class="upl" id="labelAutorizacao">
-              <span style="font-size:24px">📋</span>
-              <div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelAutTxt">Clique para selecionar a autorização</div><div style="font-size:10px;color:var(--muted)">PDF, JPG ou PNG — máx. 10MB</div></div>
+              <span style="font-size:24px">&#128196;</span>
+              <div><div style="font-size:12px;font-weight:700;color:var(--azul)" id="labelAutTxt">Selecionar autorizacao</div><div style="font-size:10px;color:var(--muted)">PDF, JPG ou PNG</div></div>
               <input type="file" id="fpFileAut" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
             </label>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:6px">
             <button class="bg" id="btnFPClear">Limpar</button>
-            <button class="bp" id="btnFPSubmit">🌴 Enviar solicitação</button>
+            <button class="bp" id="btnFPSubmit">Enviar solicitacao</button>
           </div>
         </div>
         <div id="feriasPJSucesso" style="display:none;text-align:center;padding:36px 16px">
-          <div style="font-size:44px;margin-bottom:10px">✅</div>
-          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">Solicitação enviada!</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">O RH receberá e retornará em breve.</div>
-          <div style="font-size:18px;font-weight:700;color:var(--azul);background:var(--azul-c);border:1px solid var(--borda);border-radius:9px;padding:9px 22px;display:inline-block;margin-bottom:18px" id="fpProtocol"></div>
-          <br><button class="bg" id="btnFPNew">+ Nova solicitação</button>
+          <div style="font-size:44px;margin-bottom:10px">&#10003;</div>
+          <div style="font-family:var(--ft);font-size:16px;font-weight:700;color:var(--azul);margin-bottom:7px">Solicitacao enviada!</div>
+          <div style="font-size:18px;font-weight:700;color:var(--azul);background:var(--azul-c);border-radius:9px;padding:9px 22px;display:inline-block;margin-bottom:18px" id="fpProtocol"></div>
+          <br><button class="bg" id="btnFPNew">+ Nova solicitacao</button>
         </div>
       </div></div>
       <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card"><div class="ch"><div class="ch-title">📋 Regras de férias PJ</div></div>
+        <div class="card"><div class="ch"><div class="ch-title">Regras de ferias PJ</div></div>
           <div class="cb" style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;gap:9px"><span style="font-size:16px;flex-shrink:0">🗓️</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong style="color:var(--texto)">30 dias por ano</strong><br>A partir da data de início do contrato.</div></div>
-            <div style="display:flex;gap:9px"><span style="font-size:16px;flex-shrink:0">✂️</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong style="color:var(--texto)">Fracionamento livre</strong><br>Qualquer período, quantas vezes quiser.</div></div>
-            <div style="display:flex;gap:9px"><span style="font-size:16px;flex-shrink:0">⚠️</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong style="color:var(--texto)">Saldo pode ser negativo</strong><br>Em casos excepcionais (devedor).</div></div>
-            <div style="display:flex;gap:9px"><span style="font-size:16px;flex-shrink:0">📋</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong style="color:var(--texto)">Autorização obrigatória</strong><br>Sempre anexe o doc do responsável.</div></div>
+            <div style="display:flex;gap:9px"><span style="font-size:16px">&#128197;</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong>30 dias por ano</strong> a partir do inicio do contrato.</div></div>
+            <div style="display:flex;gap:9px"><span style="font-size:16px">&#9986;</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong>Fracionamento livre</strong> - qualquer periodo.</div></div>
+            <div style="display:flex;gap:9px"><span style="font-size:16px">&#9888;</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong>Saldo pode ser negativo</strong> em casos excepcionais.</div></div>
+            <div style="display:flex;gap:9px"><span style="font-size:16px">&#128206;</span><div style="font-size:11px;color:var(--muted);line-height:1.6"><strong>Autorizacao obrigatoria</strong> do responsavel.</div></div>
           </div>
         </div>
-        <div class="card"><div class="ch"><div class="ch-title">❓ Dúvidas?</div></div>
-          <div class="cb"><div style="font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:10px">Entre em contato com o RH para dúvidas sobre saldo ou período.</div>
-          <a href="mailto:RH@concretaeng.com.br" style="display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:11px;font-weight:700;padding:7px 14px;border-radius:7px;text-decoration:none">✉️ RH@concretaeng.com.br</a></div>
+        <div class="card"><div class="ch"><div class="ch-title">Duvidas?</div></div>
+          <div class="cb"><div style="font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:10px">Entre em contato com o RH.</div>
+          <a href="mailto:RH@concretaeng.com.br" style="display:inline-flex;align-items:center;gap:5px;background:var(--azul);color:#fff;font-size:11px;font-weight:700;padding:7px 14px;border-radius:7px;text-decoration:none">RH@concretaeng.com.br</a></div>
         </div>
       </div>
     </div>
@@ -566,42 +545,42 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
     <div id="rhLoginScreen">
       <div style="max-width:380px;margin:50px auto">
         <div style="text-align:center;margin-bottom:28px">
-          <div style="width:58px;height:58px;background:var(--azul);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px">🔐</div>
+          <div style="width:58px;height:58px;background:var(--azul);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px">&#128274;</div>
           <div style="font-family:var(--ft);font-size:20px;font-weight:700;color:var(--azul);margin-bottom:4px">Portal RH</div>
-          <div style="font-size:12px;color:var(--muted)">Acesso restrito — RH e Administrador</div>
+          <div style="font-size:12px;color:var(--muted)">Acesso restrito</div>
         </div>
         <div class="card"><div class="cb" style="padding:24px">
           <div class="fg"><label class="fl">E-mail</label><input class="fi" id="rhLoginEmail" type="email" placeholder="seu@email.com.br"></div>
-          <div class="fg"><label class="fl">Senha</label><input class="fi" id="rhLoginSenha" type="password" placeholder="••••••••"></div>
-          <div id="rhLoginErro" style="display:none;background:#FEE2E2;border-radius:7px;padding:9px 12px;font-size:11px;color:#991B1B;margin-bottom:12px">❌ E-mail ou senha incorretos.</div>
+          <div class="fg"><label class="fl">Senha</label><input class="fi" id="rhLoginSenha" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"></div>
+          <div id="rhLoginErro" style="display:none;background:#FEE2E2;border-radius:7px;padding:9px 12px;font-size:11px;color:#991B1B;margin-bottom:12px">E-mail ou senha incorretos.</div>
           <button class="bp" id="btnRHLogin" style="width:100%;justify-content:center;display:flex">Entrar no Portal RH</button>
         </div></div>
       </div>
     </div>
     <div id="rhPortalContent" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:14px">
-        <div class="ph" style="margin:0;flex:1"><div class="ph-title">🔐 Portal RH — Área Restrita</div><div class="ph-sub">Notas Fiscais · Controle de Férias PJ</div></div>
-        <button class="bg" id="btnRHLogout">Sair ↩</button>
+        <div class="ph" style="margin:0;flex:1"><div class="ph-title">Portal RH - Area Restrita</div><div class="ph-sub">Notas Fiscais - Controle de Ferias PJ</div></div>
+        <button class="bg" id="btnRHLogout">Sair</button>
       </div>
       <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--borda)">
-        <button class="rht active" data-tab="nfs">🧾 Notas Fiscais</button>
-        <button class="rht" data-tab="ferias">🌴 Férias PJ</button>
+        <button class="rht active" data-tab="nfs">Notas Fiscais</button>
+        <button class="rht" data-tab="ferias">Ferias PJ</button>
       </div>
       <div id="rhTabNFs">
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">
-          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:var(--azul)" id="rhStatTotal">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:3px">NFs recebidas</div></div></div>
-          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:#065F46" id="rhStatMes">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:3px">Este mês</div></div></div>
-          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:#854D0E" id="rhStatPendente">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:3px">Pendentes</div></div></div>
+          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:var(--azul)" id="rhStatTotal">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">NFs recebidas</div></div></div>
+          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:#065F46" id="rhStatMes">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Este mes</div></div></div>
+          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:28px;font-weight:700;color:#854D0E" id="rhStatPendente">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Pendentes</div></div></div>
         </div>
         <div class="card">
-          <div class="ch"><div class="ch-title">📋 Notas Fiscais Recebidas</div><span style="font-size:11px;color:var(--muted)">Enviadas pelos prestadores PJ</span></div>
-          <div id="rhNFEmpty" style="padding:40px;text-align:center;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px;opacity:.28">🧾</div><div style="font-size:13px;font-weight:600">Nenhuma NF recebida ainda</div></div>
+          <div class="ch"><div class="ch-title">Notas Fiscais Recebidas</div></div>
+          <div id="rhNFEmpty" style="padding:40px;text-align:center;color:var(--muted)"><div style="font-size:36px;margin-bottom:10px;opacity:.28">&#129534;</div><div style="font-size:13px;font-weight:600">Nenhuma NF ainda</div></div>
           <div id="rhNFTable" style="display:none;overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px">
               <thead><tr style="background:var(--azul-c)">
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Prestador</th>
-                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">NF Nº</th>
-                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Competência</th>
+                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">NF</th>
+                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Competencia</th>
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Valor</th>
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Arquivos</th>
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Status</th>
@@ -614,41 +593,41 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
       </div>
       <div id="rhTabFerias" style="display:none">
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px">
-          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:26px;font-weight:700;color:var(--azul)" id="fpStatTotal">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Solicitações</div></div></div>
+          <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:26px;font-weight:700;color:var(--azul)" id="fpStatTotal">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Solicitacoes</div></div></div>
           <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:26px;font-weight:700;color:#854D0E" id="fpStatPend">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Pendentes</div></div></div>
           <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:26px;font-weight:700;color:#065F46" id="fpStatAprov">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Aprovadas</div></div></div>
           <div class="card"><div class="cb" style="text-align:center"><div style="font-family:var(--ft);font-size:26px;font-weight:700;color:#991B1B" id="fpStatReprov">0</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:3px">Reprovadas</div></div></div>
         </div>
         <div class="card" style="margin-bottom:18px">
-          <div class="ch"><div class="ch-title">👥 Colaboradores PJ — Saldo de Férias</div>
-            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:10px;color:var(--muted)" id="planilhaStatus">Aguardando planilha...</span><button class="bg" style="padding:4px 10px;font-size:10px" onclick="carregarPlanilha()">🔄</button></div>
+          <div class="ch"><div class="ch-title">Colaboradores PJ - Saldo de Ferias</div>
+            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:10px;color:var(--muted)" id="planilhaStatus">Aguardando...</span><button class="bg" style="padding:4px 10px;font-size:10px" onclick="carregarPlanilha()">Atualizar</button></div>
           </div>
           <div style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px">
               <thead><tr style="background:var(--azul-c)">
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Colaborador</th>
                 <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Setor</th>
-                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Início contrato</th>
-                <th style="padding:9px 14px;text-align:center;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Disponíveis</th>
-                <th style="padding:9px 14px;text-align:center;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Usados</th>
+                <th style="padding:9px 14px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Inicio</th>
+                <th style="padding:9px 14px;text-align:center;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Disponivel</th>
+                <th style="padding:9px 14px;text-align:center;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Usado</th>
                 <th style="padding:9px 14px;text-align:center;font-size:10px;background:var(--azul);color:var(--am);font-weight:700;text-transform:uppercase">SALDO</th>
               </tr></thead>
-              <tbody id="tabelaColabBody"><tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Suba o arquivo <strong>colaboradores-pj.xlsx</strong> no GitHub.</td></tr></tbody>
+              <tbody id="tabelaColabBody"><tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Suba o arquivo colaboradores-pj.xlsx no GitHub.</td></tr></tbody>
             </table>
           </div>
         </div>
         <div class="card">
-          <div class="ch"><div class="ch-title">🌴 Solicitações de Férias Recebidas</div></div>
-          <div id="fpEmpty" style="padding:36px;text-align:center;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px;opacity:.28">🌴</div><div style="font-size:13px;font-weight:600">Nenhuma solicitação ainda</div></div>
+          <div class="ch"><div class="ch-title">Solicitacoes de Ferias</div></div>
+          <div id="fpEmpty" style="padding:36px;text-align:center;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px;opacity:.28">&#127796;</div><div style="font-size:13px;font-weight:600">Nenhuma solicitacao ainda</div></div>
           <div id="fpTable" style="display:none;overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:12px">
               <thead><tr style="background:var(--azul-c)">
                 <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Colaborador</th>
-                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Período</th>
+                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Periodo</th>
                 <th style="padding:9px 12px;text-align:center;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Dias</th>
-                <th style="padding:9px 12px;text-align:center;font-size:10px;background:var(--azul);color:var(--am);font-weight:700;text-transform:uppercase">Saldo após</th>
-                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Autorização</th>
-                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Status / Justificativa</th>
+                <th style="padding:9px 12px;text-align:center;font-size:10px;background:var(--azul);color:var(--am);font-weight:700;text-transform:uppercase">Saldo</th>
+                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Autorizacao</th>
+                <th style="padding:9px 12px;text-align:left;font-size:10px;color:var(--azul);font-weight:700;text-transform:uppercase">Status</th>
                 <th style="padding:9px 12px;font-size:10px;color:var(--azul);font-weight:700"></th>
               </tr></thead>
               <tbody id="fpTableBody"></tbody>
@@ -662,457 +641,663 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
 <!-- MODAIS -->
 <div class="mo" id="modalTour"><div class="mb" style="width:480px">
-  <div style="text-align:center;margin-bottom:18px"><div style="font-size:32px;margin-bottom:5px">🚀</div><div class="mt" style="margin:0">Tour da Intranet Grupo Pez</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Conheça tudo que preparamos para você</div></div>
+  <div style="text-align:center;margin-bottom:18px"><div style="font-size:32px;margin-bottom:5px">&#128640;</div><div class="mt" style="margin:0">Tour da Intranet Grupo Pez</div></div>
   <div id="tourBody" style="min-height:150px"></div>
   <div style="display:flex;justify-content:center;gap:5px;margin:14px 0" id="tourDots"></div>
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <button class="bg" id="tourPrev">← Anterior</button>
+    <button class="bg" id="tourPrev">Anterior</button>
     <span style="font-size:11px;color:var(--muted)" id="tourCounter"></span>
-    <button class="bp" id="tourNext">Próximo →</button>
+    <button class="bp" id="tourNext">Proximo</button>
   </div>
 </div></div>
+
 <div class="mo" id="modalRH"><div class="mb" style="width:440px">
-  <div style="text-align:center;margin-bottom:18px"><div style="font-size:32px;margin-bottom:5px">👥</div><div class="mt" style="margin:0">Fale com o RH</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Mensagem para <strong>RH@concretaeng.com.br</strong></div></div>
+  <div style="text-align:center;margin-bottom:18px"><div style="font-size:32px;margin-bottom:5px">&#128101;</div><div class="mt" style="margin:0">Fale com o RH</div><div style="font-size:12px;color:var(--muted);margin-top:3px">RH@concretaeng.com.br</div></div>
   <div class="fg"><label class="fl">Seu nome</label><input class="fi" id="rhNome" placeholder="Nome completo"></div>
   <div class="fg"><label class="fl">Seu e-mail</label><input class="fi" id="rhEmail" type="email" placeholder="seu@email.com.br"></div>
-  <div class="fg"><label class="fl">Assunto</label><select class="fi" id="rhAssunto"><option value="">Selecionar...</option><option>Benefícios</option><option>Férias e licenças</option><option>Holerite / Pagamento</option><option>Ponto eletrônico</option><option>Dúvida geral</option><option>Outro</option></select></div>
-  <div class="fg"><label class="fl">Mensagem</label><textarea class="fi" id="rhMensagem" rows="4" placeholder="Descreva sua dúvida ou solicitação..."></textarea></div>
-  <div id="rhSucesso" style="display:none;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:var(--r);padding:12px;text-align:center;margin-bottom:12px"><div style="font-size:20px;margin-bottom:3px">✅</div><div style="font-size:12px;font-weight:600;color:#065F46">Mensagem enviada! O RH retorna em até 1 dia útil.</div></div>
-  <div style="text-align:right"><button class="bg" id="btnCancelRH" style="margin-right:8px">Cancelar</button><button class="bp" id="btnSendRH">✉️ Enviar</button></div>
+  <div class="fg"><label class="fl">Assunto</label><select class="fi" id="rhAssunto"><option value="">Selecionar...</option><option>Beneficios</option><option>Ferias e licencas</option><option>Holerite / Pagamento</option><option>Ponto eletronico</option><option>Duvida geral</option><option>Outro</option></select></div>
+  <div class="fg"><label class="fl">Mensagem</label><textarea class="fi" id="rhMensagem" rows="4" placeholder="Descreva sua duvida..."></textarea></div>
+  <div id="rhSucesso" style="display:none;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:var(--r);padding:12px;text-align:center;margin-bottom:12px"><div style="font-size:12px;font-weight:600;color:#065F46">Mensagem enviada! O RH retorna em ate 1 dia util.</div></div>
+  <div style="text-align:right"><button class="bg" id="btnCancelRH" style="margin-right:8px">Cancelar</button><button class="bp" id="btnSendRH">Enviar</button></div>
 </div></div>
+
 <div class="mo" id="modalNoticia"><div class="mb">
-  <div class="mt">📢 Novo Comunicado</div>
-  <div class="fg"><label class="fl">Título</label><input class="fi" id="noticiaTitle" placeholder="Título do comunicado"></div>
+  <div class="mt">Novo Comunicado</div>
+  <div class="fg"><label class="fl">Titulo</label><input class="fi" id="noticiaTitle" placeholder="Titulo do comunicado"></div>
   <div class="fg"><label class="fl">Categoria</label><select class="fi" id="noticiaTag"><option>Comunicado</option><option>Novidade</option><option>RH</option><option>Em breve</option></select></div>
-  <div class="fg"><label class="fl">Texto</label><textarea class="fi" id="noticiaText" rows="3" placeholder="Conteúdo..."></textarea></div>
+  <div class="fg"><label class="fl">Texto</label><textarea class="fi" id="noticiaText" rows="3" placeholder="Conteudo..."></textarea></div>
   <div style="margin-top:16px;text-align:right"><button class="bg" id="btnCancelNoticia" style="margin-right:8px">Cancelar</button><button class="bp" id="btnSaveNoticia">Publicar</button></div>
 </div></div>
+
 <div class="mo" id="modalEvento"><div class="mb">
-  <div class="mt">📅 Novo Evento</div>
-  <div class="fg"><label class="fl">Nome</label><input class="fi" id="eventoNome" placeholder="Ex: Reunião Geral"></div>
-  <div class="fr"><div class="fg"><label class="fl">Data</label><input class="fi" id="eventoData" type="date"></div><div class="fg"><label class="fl">Horário</label><input class="fi" id="eventoHora" type="time"></div></div>
-  <div class="fg"><label class="fl">Local</label><input class="fi" id="eventoLocal" placeholder="Online / Sala de Reuniões"></div>
+  <div class="mt">Novo Evento</div>
+  <div class="fg"><label class="fl">Nome</label><input class="fi" id="eventoNome" placeholder="Ex: Reuniao Geral"></div>
+  <div class="fr"><div class="fg"><label class="fl">Data</label><input class="fi" id="eventoData" type="date"></div><div class="fg"><label class="fl">Horario</label><input class="fi" id="eventoHora" type="time"></div></div>
+  <div class="fg"><label class="fl">Local</label><input class="fi" id="eventoLocal" placeholder="Online / Sala de Reunioes"></div>
   <div style="margin-top:16px;text-align:right"><button class="bg" id="btnCancelEvento" style="margin-right:8px">Cancelar</button><button class="bp" id="btnSaveEvento">Salvar</button></div>
 </div></div>
 
 <script>
-// ── DADOS ──
-var noticias=[
-  {titulo:'Bem-vindo à nova intranet do Grupo Pez!',tag:'Novidade',texto:'Nossa intranet foi lançada para centralizar comunicados, documentos e informações da empresa.',data:'19/05/2026',cover:'c-az',emoji:'🎉',tour:true},
-  {titulo:'Fale com o RH',tag:'RH',texto:'Dúvidas sobre benefícios, férias, holerites? Envie sua mensagem diretamente para nossa equipe. Respondemos em até 1 dia útil.',data:'15/05/2026',cover:'c-am',emoji:'👥',rh:true},
-  {titulo:'Em breve: Política de Emissão de Notas Fiscais',tag:'Em breve',texto:'Estamos finalizando a política oficial de emissão de NF para prestadores e parceiros.',data:'22/05/2026',cover:'c-cz',emoji:'🧾',embreve:true}
+var noticias = [
+  {titulo:'Bem-vindo a nova intranet do Grupo Pez!', tag:'Novidade', texto:'Nossa intranet foi lancada para centralizar comunicados, documentos e informacoes da empresa.', data:'19/05/2026', cover:'c-az', emoji:'&#127881;', tour:true},
+  {titulo:'Fale com o RH', tag:'RH', texto:'Duvidas sobre beneficios, ferias, holerites? Envie sua mensagem. Respondemos em ate 1 dia util.', data:'15/05/2026', cover:'c-am', emoji:'&#128101;', rh:true},
+  {titulo:'Em breve: Politica de Emissao de Notas Fiscais', tag:'Em breve', texto:'Estamos finalizando a politica oficial de emissao de NF para prestadores e parceiros.', data:'22/05/2026', cover:'c-cz', emoji:'&#129534;', embreve:true}
 ];
-var eventos=[
-  {nome:'Arraiá do Grupo Pez',data:'2026-06-19',hora:'19:00',local:'Estacionamento – Rua Santo André'},
-  {nome:'Entrega NF PJ — Prestadores Internos',data:'2026-06-01',hora:'',local:'Dia inteiro'}
+var eventos = [
+  {nome:'Arraial do Grupo Pez', data:'2026-06-19', hora:'19:00', local:'Estacionamento - Rua Santo Andre'},
+  {nome:'Entrega NF PJ - Prestadores Internos', data:'2026-06-01', hora:'', local:'Dia inteiro'}
 ];
-var vagasLog=[],nfLog=[],feriasLog=[],colaboradoresPJ=[],colaboradoresAniv=[];
-var RH_USERS=[{email:'RH@concretaeng.com.br',senha:'GrupoPez@RH2026'},{email:'TI@grupopez.com.br',senha:'GrupoPez@Admin2026'}];
-var UPLOADCARE_KEY='66b7f6357a9aa19ef0e8';
-var likes=0,hearts=0,likedMe=false,heartedMe=false;
-var calAno=new Date().getFullYear(),calMes=new Date().getMonth();
-var notificacoes=[];
+var vagasLog=[], nfLog=[], feriasLog=[], colaboradoresPJ=[];
+var RH_USERS = [{email:'RH@concretaeng.com.br',senha:'GrupoPez@RH2026'},{email:'TI@grupopez.com.br',senha:'GrupoPez@Admin2026'}];
+var UC_KEY = '66b7f6357a9aa19ef0e8';
+var likes=0, hearts=0, likedMe=false, heartedMe=false;
+var calAno=new Date().getFullYear(), calMes=new Date().getMonth();
+var notificacoes = [];
 
-// ── BANNER ──
-function renderBanner(){
-  var el=document.getElementById('bannerDinamico');
-  if(!el) return;
-  var isFesta=new Date()<new Date(2026,5,20);
-  if(isFesta){
-    el.innerHTML='<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:column;align-items:center;margin-bottom:4px">'
-      +'<img src="festa-junina.jpeg" alt="Arraiá do Grupo Pez" style="width:100%;max-width:520px;display:block;border-radius:14px 14px 0 0" onerror="this.style.display=\'none\'">'
-      +'<div style="width:100%;max-width:520px;background:rgba(10,6,30,.92);border-radius:0 0 14px 14px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px">'
-      +'<button class="br" id="btnLike" onclick="doReact(\'like\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">👍 <span style="font-size:15px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
-      +'<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">❤️ <span style="font-size:15px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
-      +'</div></div>';
+function renderBanner() {
+  var el = document.getElementById('bannerDinamico');
+  if (!el) return;
+  var isFesta = new Date() < new Date(2026,5,20);
+  if (isFesta) {
+    el.innerHTML = '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:column;align-items:center;margin-bottom:4px">'
+      + '<img src="festa-junina.jpeg" alt="Arraial do Grupo Pez" style="width:100%;max-width:520px;display:block;border-radius:14px 14px 0 0" onerror="this.style.display=\'none\'">'
+      + '<div style="width:100%;max-width:520px;background:rgba(10,6,30,.92);border-radius:0 0 14px 14px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px">'
+      + '<button class="br" id="btnLike" onclick="doReact(\'like\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">&#128077; <span style="font-size:15px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
+      + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">&#10084; <span style="font-size:15px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
+      + '</div></div>';
   } else {
-    el.innerHTML='<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;margin-bottom:4px">'
-      +'<div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,209,0,.06)"></div>'
-      +'<div style="position:relative;z-index:1"><div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:7px">Portal Corporativo Interno</div>'
-      +'<div style="font-family:var(--ft);font-size:32px;font-weight:700;color:#fff;margin-bottom:7px">Grupo Pez</div>'
-      +'<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:18px">Conectando pessoas, projetos e resultados.</div>'
-      +'<div style="display:flex;gap:9px;flex-wrap:wrap">'
-      +'<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px;font-weight:500">🏗️ 25 anos de história</div>'
-      +'<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px;font-weight:500">🌎 Obras em todo o Brasil</div>'
-      +'<div style="background:rgba(255,209,0,.14);border:1px solid rgba(255,209,0,.28);border-radius:7px;padding:7px 14px;color:var(--am);font-size:11px;font-weight:700">✦ Construindo o futuro</div>'
-      +'</div></div>'
-      +'<div style="position:relative;z-index:1;flex-shrink:0"><div style="width:88px;height:88px;background:rgba(255,255,255,.07);border-radius:18px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,209,0,.18)">'
-      +'<svg width="56" height="56" viewBox="0 0 64 64"><path d="M16 16h12l8 16-8 16H16l8-16z" fill="#FFD100"/><path d="M36 16h12l8 16-8 16H36l8-16z" fill="rgba(255,209,0,.38)"/></svg>'
-      +'</div></div></div>';
+    el.innerHTML = '<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden">'
+      + '<div style="position:relative;z-index:1"><div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:7px">Portal Corporativo Interno</div>'
+      + '<div style="font-family:var(--ft);font-size:32px;font-weight:700;color:#fff;margin-bottom:7px">Grupo Pez</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:18px">Conectando pessoas, projetos e resultados.</div>'
+      + '<div style="display:flex;gap:9px;flex-wrap:wrap">'
+      + '<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px">25 anos de historia</div>'
+      + '<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px">Obras em todo o Brasil</div>'
+      + '<div style="background:rgba(255,209,0,.14);border:1px solid rgba(255,209,0,.28);border-radius:7px;padding:7px 14px;color:var(--am);font-size:11px;font-weight:700">Construindo o futuro</div>'
+      + '</div></div>'
+      + '<div style="flex-shrink:0;width:88px;height:88px;background:rgba(255,255,255,.07);border-radius:18px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,209,0,.18)">'
+      + '<svg width="56" height="56" viewBox="0 0 64 64"><path d="M16 16h12l8 16-8 16H16l8-16z" fill="#FFD100"/><path d="M36 16h12l8 16-8 16H36l8-16z" fill="rgba(255,209,0,.38)"/></svg>'
+      + '</div></div>';
   }
 }
 
-// ── REAÇÕES ──
-function doReact(type){
-  var banner=document.getElementById('arraiabanner');if(!banner)return;
-  var btn=document.getElementById(type==='like'?'btnLike':'btnHeart'),emoji=type==='like'?'👍':'❤️';
-  if(type==='like'){if(!likedMe){likes++;likedMe=true;}else{likes--;likedMe=false;}}
-  else{if(!heartedMe){hearts++;heartedMe=true;}else{hearts--;heartedMe=false;}}
-  var lc=document.getElementById('likeCount'),hc=document.getElementById('heartCount');
-  if(lc)lc.textContent=likes;if(hc)hc.textContent=hearts;
-  var bl=document.getElementById('btnLike'),bh=document.getElementById('btnHeart');
-  if(bl)bl.className='br'+(likedMe?' reacted':'');
-  if(bh)bh.className='br'+(heartedMe?' reacted':'');
-  if(btn){var pop=document.createElement('span');pop.className='react-pop';pop.textContent=emoji;pop.style.cssText='position:absolute;pointer-events:none;font-size:24px;animation:fu 1.1s forwards';var r=btn.getBoundingClientRect(),br=banner.getBoundingClientRect();pop.style.left=(r.left-br.left+r.width/2-12)+'px';pop.style.top=(r.top-br.top-16)+'px';banner.style.position='relative';banner.appendChild(pop);setTimeout(function(){if(pop.parentNode)pop.parentNode.removeChild(pop);},1200);}
+function doReact(type) {
+  var banner = document.getElementById('arraiabanner');
+  if (!banner) return;
+  var btnId = type === 'like' ? 'btnLike' : 'btnHeart';
+  var countId = type === 'like' ? 'likeCount' : 'heartCount';
+  if (type === 'like') { if (!likedMe) { likes++; likedMe=true; } else { likes--; likedMe=false; } }
+  else { if (!heartedMe) { hearts++; heartedMe=true; } else { hearts--; heartedMe=false; } }
+  var lc = document.getElementById('likeCount');
+  var hc = document.getElementById('heartCount');
+  if (lc) lc.textContent = likes;
+  if (hc) hc.textContent = hearts;
+  var bl = document.getElementById('btnLike');
+  var bh = document.getElementById('btnHeart');
+  if (bl) bl.className = 'br' + (likedMe ? ' reacted' : '');
+  if (bh) bh.className = 'br' + (heartedMe ? ' reacted' : '');
 }
 
-// ── NOTIFICAÇÕES ──
-function addNotif(icon,txt,sub,page){
-  notificacoes.unshift({icon:icon,txt:txt,sub:sub,page:page,lida:false});
+function addNotif(icon, txt, sub, page) {
+  notificacoes.unshift({icon:icon, txt:txt, sub:sub, page:page, lida:false});
   renderNotif();
 }
-function renderNotif(){
-  var unread=notificacoes.filter(function(n){return !n.lida;}).length;
-  var badge=document.getElementById('notifBadge');
-  if(unread>0){badge.textContent=unread>9?'9+':unread;badge.classList.add('show');}else{badge.classList.remove('show');}
-  var list=document.getElementById('notifList');
-  if(!notificacoes.length){list.innerHTML='<div style="padding:24px;text-align:center;font-size:12px;color:var(--muted)">Nenhuma notificação.</div>';return;}
-  list.innerHTML=notificacoes.map(function(n,i){return '<div class="notif-item'+(n.lida?'':' unread')+'" onclick="notifClick('+i+')" style="cursor:pointer"><span style="font-size:20px">'+n.icon+'</span><div><div style="font-size:12px;font-weight:600;color:var(--texto)">'+n.txt+'</div><div style="font-size:10px;color:var(--muted)">'+n.sub+'</div></div></div>';}).join('');
+function renderNotif() {
+  var unread = notificacoes.filter(function(n){return !n.lida;}).length;
+  var badge = document.getElementById('notifBadge');
+  if (unread > 0) { badge.textContent = unread > 9 ? '9+' : unread; badge.classList.add('show'); }
+  else { badge.classList.remove('show'); }
+  var list = document.getElementById('notifList');
+  if (!notificacoes.length) { list.innerHTML = '<div style="padding:24px;text-align:center;font-size:12px;color:var(--muted)">Nenhuma notificacao.</div>'; return; }
+  list.innerHTML = notificacoes.map(function(n,i) {
+    return '<div class="notif-item' + (n.lida ? '' : ' unread') + '" onclick="notifClick(' + i + ')" style="cursor:pointer">'
+      + '<span style="font-size:20px">' + n.icon + '</span>'
+      + '<div><div style="font-size:12px;font-weight:600;color:var(--texto)">' + n.txt + '</div>'
+      + '<div style="font-size:10px;color:var(--muted)">' + n.sub + '</div></div></div>';
+  }).join('');
 }
-function notifClick(i){notificacoes[i].lida=true;var p=notificacoes[i].page;renderNotif();document.getElementById('notifPanel').classList.remove('open');if(p)nav(p);}
-document.getElementById('btnNotif').addEventListener('click',function(e){e.stopPropagation();document.getElementById('notifPanel').classList.toggle('open');});
-document.getElementById('btnNotifClear').addEventListener('click',function(){notificacoes.forEach(function(n){n.lida=true;});renderNotif();});
-document.addEventListener('click',function(e){var p=document.getElementById('notifPanel');if(p&&!p.contains(e.target)&&e.target!==document.getElementById('btnNotif'))p.classList.remove('open');});
+function notifClick(i) {
+  notificacoes[i].lida = true;
+  var p = notificacoes[i].page;
+  renderNotif();
+  document.getElementById('notifPanel').classList.remove('open');
+  if (p) nav(p);
+}
 
-// ── NAVEGAÇÃO ──
-var PT={home:'Início',noticias:'Comunicados',documentos:'Documentos',calendario:'Calendário',links:'Treinamentos',vagas:'Abertura de Vaga',enviarnf:'Enviar Nota Fiscal',solicitarferias:'Solicitar Férias',portalrh:'Portal RH'};
-function nav(page){
+var PT = {home:'Inicio',noticias:'Comunicados',documentos:'Documentos',calendario:'Calendario',links:'Treinamentos',vagas:'Abertura de Vaga',enviarnf:'Enviar Nota Fiscal',solicitarferias:'Solicitar Ferias',portalrh:'Portal RH'};
+function nav(page) {
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});
-  var pg=document.getElementById('page-'+page);if(pg)pg.classList.add('active');
-  var ni=document.querySelector('.ni[data-page="'+page+'"]');if(ni)ni.classList.add('active');
-  document.getElementById('tbTitle').textContent=PT[page]||page;
+  var pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+  var ni = document.querySelector('.ni[data-page="' + page + '"]');
+  if (ni) ni.classList.add('active');
+  document.getElementById('tbTitle').textContent = PT[page] || page;
   closeSB();
-  if(page==='home')renderHome();
-  if(page==='noticias')renderNoticias();
-  if(page==='calendario')renderCal();
-}
-document.querySelectorAll('.ni[data-page]').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();nav(this.dataset.page);});});
-document.querySelectorAll('[data-goto]').forEach(function(el){el.addEventListener('click',function(){nav(this.dataset.goto);});});
-document.getElementById('hbg').addEventListener('click',function(){document.getElementById('sb').classList.toggle('open');document.getElementById('ov').classList.toggle('open');});
-document.getElementById('ov').addEventListener('click',closeSB);
-function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('open');}
-function openM(id){document.getElementById(id).classList.add('open');}
-function closeM(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.mo').forEach(function(m){m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});});
-
-// ── HOME ──
-function renderHome(){
-  var nl=document.getElementById('homeNewsList');
-  nl.innerHTML=noticias.slice(0,3).map(function(n){
-    var action=n.tour?'onclick="openTour()"':n.rh?'onclick="openM(\'modalRH\')"':'onclick="nav(\'noticias\')"';
-    return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--borda);cursor:pointer" '+action+'>'
-      +'<div style="width:46px;height:46px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px" class="'+n.cover+'">'+n.emoji+'</div>'
-      +'<div style="flex:1"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--azul-m);margin-bottom:2px">'+n.tag+'</div>'
-      +'<div style="font-size:12px;font-weight:600;color:var(--texto);line-height:1.4;margin-bottom:2px">'+n.titulo+'</div>'
-      +'<div style="font-size:10px;color:var(--muted)">'+n.data+'</div></div>'
-      +'<div style="font-size:11px;color:var(--azul-m);font-weight:600;flex-shrink:0;align-self:center">→</div></div>';
-  }).join('');
-  document.getElementById('homeCalList').innerHTML=eventos.slice(0,3).map(function(e){
-    var d=new Date(e.data+'T12:00:00');
-    return '<div class="ci"><div class="cd"><div class="cd-n">'+d.getDate().toString().padStart(2,'0')+'</div><div class="cd-m">'+d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')+'</div></div><div><div class="ci-title">'+e.nome+'</div><div class="ci-sub">'+(e.hora?e.hora+' · ':'')+e.local+'</div></div></div>';
-  }).join('');
+  if (page === 'home') renderHome();
+  if (page === 'noticias') renderNoticias();
+  if (page === 'calendario') renderCal();
 }
 
-// ── COMUNICADOS ──
-function renderNoticias(){
-  document.getElementById('newsGrid').innerHTML=noticias.map(function(n){
-    var footer=n.tour?'<span style="cursor:pointer;background:var(--azul);color:#fff;padding:4px 11px;border-radius:6px;font-size:10px" onclick="openTour()">▶ Ver tour</span>':n.rh?'<span style="cursor:pointer;background:var(--azul);color:#fff;padding:4px 11px;border-radius:6px;font-size:10px" onclick="openM(\'modalRH\')">✉️ Enviar mensagem</span>':n.embreve?'<span style="font-size:10px;color:#6B7280;font-style:italic">Disponível em breve</span>':'<span style="font-size:10px;color:var(--azul-m);font-weight:600">Ler mais →</span>';
-    var badge=n.embreve?'<span style="background:#374151;color:#9CA3AF;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:5px">🔒 EM BREVE</span>':'';
-    return '<div class="nb"><div class="nc '+n.cover+'">'+n.emoji+'</div><div class="nb-body"><div style="display:flex;align-items:center;margin-bottom:4px"><div class="nb-tag">'+n.tag+'</div>'+badge+'</div><div class="nb-title">'+n.titulo+'</div><div class="nb-excerpt">'+n.texto+'</div><div class="nb-footer"><span class="nb-date">📅 '+n.data+'</span>'+footer+'</div></div></div>';
-  }).join('');
+document.querySelectorAll('.ni[data-page]').forEach(function(el) {
+  el.addEventListener('click', function(e) { e.preventDefault(); nav(this.dataset.page); });
+});
+document.querySelectorAll('[data-goto]').forEach(function(el) {
+  el.addEventListener('click', function() { nav(this.dataset.goto); });
+});
+document.getElementById('hbg').addEventListener('click', function() {
+  document.getElementById('sb').classList.toggle('open');
+  document.getElementById('ov').classList.toggle('open');
+});
+document.getElementById('ov').addEventListener('click', closeSB);
+function closeSB() {
+  document.getElementById('sb').classList.remove('open');
+  document.getElementById('ov').classList.remove('open');
 }
-document.getElementById('btnNovaNoticia').addEventListener('click',function(){openM('modalNoticia');});
-document.getElementById('btnCancelNoticia').addEventListener('click',function(){closeM('modalNoticia');});
-document.getElementById('btnSaveNoticia').addEventListener('click',function(){
-  var t=document.getElementById('noticiaTitle').value.trim();if(!t)return;
-  var cv=['c-az','c-am','c-cz'],em=['📢','📋','✨','💡','📌'];
-  noticias.unshift({titulo:t,tag:document.getElementById('noticiaTag').value,texto:document.getElementById('noticiaText').value.trim(),data:new Date().toLocaleDateString('pt-BR'),cover:cv[Math.floor(Math.random()*3)],emoji:em[Math.floor(Math.random()*5)]});
-  closeM('modalNoticia');document.getElementById('noticiaTitle').value='';document.getElementById('noticiaText').value='';renderNoticias();
+function openM(id) { document.getElementById(id).classList.add('open'); }
+function closeM(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.mo').forEach(function(m) {
+  m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+});
+document.getElementById('btnNotif').addEventListener('click', function(e) {
+  e.stopPropagation();
+  document.getElementById('notifPanel').classList.toggle('open');
+});
+document.getElementById('btnNotifClear').addEventListener('click', function() {
+  notificacoes.forEach(function(n){n.lida=true;});
+  renderNotif();
+});
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('notifPanel');
+  if (panel && !panel.contains(e.target) && e.target !== document.getElementById('btnNotif')) {
+    panel.classList.remove('open');
+  }
 });
 
-// ── CALENDÁRIO ──
-function calNavMes(dir){calMes+=dir;if(calMes>11){calMes=0;calAno++;}if(calMes<0){calMes=11;calAno--;}renderCal();}
-function renderCal(){
-  var hoje=new Date();
-  document.getElementById('calMesAno').textContent=new Date(calAno,calMes,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-  var days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  var html=days.map(function(d){return '<div class="mdh">'+d+'</div>';}).join('');
-  var f=new Date(calAno,calMes,1),dim=new Date(calAno,calMes+1,0).getDate();
-  var evd=eventos.map(function(e){var d=new Date(e.data+'T12:00:00');return(d.getMonth()===calMes&&d.getFullYear()===calAno)?d.getDate():-1;});
-  for(var i=0;i<f.getDay();i++)html+='<div class="md om"></div>';
-  for(var d=1;d<=dim;d++){var isToday=d===hoje.getDate()&&calMes===hoje.getMonth()&&calAno===hoje.getFullYear();html+='<div class="md'+(isToday?' today':'')+(evd.indexOf(d)>=0?' has-ev':'')+'">'+d+'</div>';}
-  document.getElementById('calGrid').innerHTML=html;
-  document.getElementById('fullCalList').innerHTML=eventos.length?eventos.map(function(e,i){
-    var d=new Date(e.data+'T12:00:00');
-    return '<div class="ci" style="justify-content:space-between"><div style="display:flex;gap:10px;align-items:center"><div class="cd"><div class="cd-n">'+d.getDate().toString().padStart(2,'0')+'</div><div class="cd-m">'+d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')+'</div></div><div><div class="ci-title">'+e.nome+'</div><div class="ci-sub">'+(e.hora?e.hora+' · ':'')+e.local+'</div></div></div><button onclick="delEvento('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626;padding:4px">🗑️</button></div>';
-  }).join(''):'<div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">Nenhum evento cadastrado.</div>';
+function renderHome() {
+  var nl = document.getElementById('homeNewsList');
+  nl.innerHTML = noticias.slice(0,3).map(function(n) {
+    var action = n.tour ? 'onclick="openTour()"' : n.rh ? 'onclick="openM(\'modalRH\')"' : 'onclick="nav(\'noticias\')"';
+    return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--borda);cursor:pointer" ' + action + '>'
+      + '<div style="width:46px;height:46px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px" class="' + n.cover + '">' + n.emoji + '</div>'
+      + '<div style="flex:1"><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--azul-m);margin-bottom:2px">' + n.tag + '</div>'
+      + '<div style="font-size:12px;font-weight:600;color:var(--texto);line-height:1.4;margin-bottom:2px">' + n.titulo + '</div>'
+      + '<div style="font-size:10px;color:var(--muted)">' + n.data + '</div></div>'
+      + '<div style="font-size:11px;color:var(--azul-m);font-weight:600;align-self:center">&#8594;</div></div>';
+  }).join('');
+  document.getElementById('homeCalList').innerHTML = eventos.slice(0,3).map(function(e) {
+    var d = new Date(e.data + 'T12:00:00');
+    var dia = d.getDate().toString().padStart(2,'0');
+    var mes = d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','');
+    return '<div class="ci"><div class="cd"><div class="cd-n">' + dia + '</div><div class="cd-m">' + mes + '</div></div>'
+      + '<div><div class="ci-title">' + e.nome + '</div><div class="ci-sub">' + (e.hora ? e.hora + ' - ' : '') + e.local + '</div></div></div>';
+  }).join('');
 }
-function delEvento(i){if(!confirm('Excluir "'+eventos[i].nome+'"?'))return;eventos.splice(i,1);renderCal();}
+
+function renderNoticias() {
+  document.getElementById('newsGrid').innerHTML = noticias.map(function(n) {
+    var footer = n.tour
+      ? '<span style="cursor:pointer;background:var(--azul);color:#fff;padding:4px 11px;border-radius:6px;font-size:10px" onclick="openTour()">Ver tour</span>'
+      : n.rh
+      ? '<span style="cursor:pointer;background:var(--azul);color:#fff;padding:4px 11px;border-radius:6px;font-size:10px" onclick="openM(\'modalRH\')">Enviar mensagem</span>'
+      : n.embreve
+      ? '<span style="font-size:10px;color:#6B7280;font-style:italic">Disponivel em breve</span>'
+      : '<span style="font-size:10px;color:var(--azul-m);font-weight:600">Ler mais</span>';
+    var badge = n.embreve ? '<span style="background:#374151;color:#9CA3AF;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:5px">EM BREVE</span>' : '';
+    return '<div class="nb"><div class="nc ' + n.cover + '">' + n.emoji + '</div>'
+      + '<div class="nb-body"><div style="display:flex;align-items:center;margin-bottom:4px"><div class="nb-tag">' + n.tag + '</div>' + badge + '</div>'
+      + '<div class="nb-title">' + n.titulo + '</div><div class="nb-excerpt">' + n.texto + '</div>'
+      + '<div class="nb-footer"><span class="nb-date">' + n.data + '</span>' + footer + '</div></div></div>';
+  }).join('');
+}
+document.getElementById('btnNovaNoticia').addEventListener('click', function(){openM('modalNoticia');});
+document.getElementById('btnCancelNoticia').addEventListener('click', function(){closeM('modalNoticia');});
+document.getElementById('btnSaveNoticia').addEventListener('click', function() {
+  var t = document.getElementById('noticiaTitle').value.trim();
+  if (!t) return;
+  var cv = ['c-az','c-am','c-cz'];
+  noticias.unshift({titulo:t, tag:document.getElementById('noticiaTag').value, texto:document.getElementById('noticiaText').value.trim(), data:new Date().toLocaleDateString('pt-BR'), cover:cv[Math.floor(Math.random()*3)], emoji:'&#128226;'});
+  closeM('modalNoticia');
+  document.getElementById('noticiaTitle').value = '';
+  document.getElementById('noticiaText').value = '';
+  renderNoticias();
+});
+
+function calNavMes(dir) { calMes += dir; if(calMes>11){calMes=0;calAno++;} if(calMes<0){calMes=11;calAno--;} renderCal(); }
+function renderCal() {
+  var hoje = new Date();
+  document.getElementById('calMesAno').textContent = new Date(calAno,calMes,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  var days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+  var html = days.map(function(d){return '<div class="mdh">'+d+'</div>';}).join('');
+  var f = new Date(calAno,calMes,1), dim = new Date(calAno,calMes+1,0).getDate();
+  var evd = eventos.map(function(e){var d=new Date(e.data+'T12:00:00');return(d.getMonth()===calMes&&d.getFullYear()===calAno)?d.getDate():-1;});
+  for (var i=0;i<f.getDay();i++) html += '<div class="md om"></div>';
+  for (var d=1;d<=dim;d++) {
+    var isT = d===hoje.getDate()&&calMes===hoje.getMonth()&&calAno===hoje.getFullYear();
+    html += '<div class="md'+(isT?' today':'')+(evd.indexOf(d)>=0?' has-ev':'')+'">'+d+'</div>';
+  }
+  document.getElementById('calGrid').innerHTML = html;
+  document.getElementById('fullCalList').innerHTML = eventos.length ? eventos.map(function(e,i) {
+    var d = new Date(e.data+'T12:00:00');
+    var dia = d.getDate().toString().padStart(2,'0');
+    var mes = d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','');
+    return '<div class="ci" style="justify-content:space-between">'
+      + '<div style="display:flex;gap:10px;align-items:center"><div class="cd"><div class="cd-n">'+dia+'</div><div class="cd-m">'+mes+'</div></div>'
+      + '<div><div class="ci-title">'+e.nome+'</div><div class="ci-sub">'+(e.hora?e.hora+' - ':'')+e.local+'</div></div></div>'
+      + '<button onclick="delEvento('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626;padding:4px">&#128465;</button></div>';
+  }).join('') : '<div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">Nenhum evento.</div>';
+}
+function delEvento(i) { if(!confirm('Excluir "'+eventos[i].nome+'"?')) return; eventos.splice(i,1); renderCal(); }
 document.getElementById('btnNovoEvento').addEventListener('click',function(){openM('modalEvento');});
 document.getElementById('btnCancelEvento').addEventListener('click',function(){closeM('modalEvento');});
 document.getElementById('btnSaveEvento').addEventListener('click',function(){
-  var nome=document.getElementById('eventoNome').value.trim(),data=document.getElementById('eventoData').value;
-  if(!nome||!data)return;
+  var nome=document.getElementById('eventoNome').value.trim(), data=document.getElementById('eventoData').value;
+  if(!nome||!data) return;
   eventos.push({nome:nome,data:data,hora:document.getElementById('eventoHora').value,local:document.getElementById('eventoLocal').value.trim()||'A confirmar'});
   eventos.sort(function(a,b){return a.data.localeCompare(b.data);});
-  closeM('modalEvento');['eventoNome','eventoData','eventoHora','eventoLocal'].forEach(function(id){document.getElementById(id).value='';});renderCal();
+  closeM('modalEvento');
+  ['eventoNome','eventoData','eventoHora','eventoLocal'].forEach(function(id){document.getElementById(id).value='';});
+  renderCal();
 });
 
-// ── TOUR ──
-var tourData=[
-  {icon:'🎯',bg:'var(--azul-c)',title:'Por que criamos esta intranet?',text:'O Grupo Pez cresceu muito. Com equipes em diversas obras pelo Brasil, sentimos a necessidade de ter um ponto único onde todos possam se comunicar, acessar documentos e se manter informados.'},
-  {icon:'📢',bg:'var(--am-c)',title:'Comunicados e novidades',text:'Chega de informação perdida no WhatsApp ou e-mail. Todos os comunicados oficiais ficam aqui, organizados e acessíveis a qualquer hora.'},
-  {icon:'📁',bg:'#F0FDF4',title:'Documentos sempre à mão',text:'Políticas, contratos, manuais e formulários reunidos em um só lugar. Sem precisar pedir para ninguém enviar o arquivo.'},
-  {icon:'🎓',bg:'#FFF1F2',title:'Treinamentos por área',text:'RH, Financeiro, Engenharia, Compras — cada área terá seus guias de capacitação. Novos colaboradores se integram mais rápido.'},
-  {icon:'🧑‍💼',bg:'var(--azul-c)',title:'Abertura de vagas online',text:'O formulário de abertura de vagas envia a solicitação diretamente ao RH, com protocolo de acompanhamento.'},
-  {icon:'💛',bg:'var(--am-c)',title:'Feita para você',text:'Esta intranet é nossa — do Grupo Pez. Ela vai crescer junto com a empresa. Sua participação faz parte disso.'}
+var tourData = [
+  {icon:'&#127919;',bg:'var(--azul-c)',title:'Por que criamos esta intranet?',text:'O Grupo Pez cresceu muito. Com equipes em diversas obras pelo Brasil, sentimos a necessidade de ter um ponto unico onde todos possam se comunicar e se manter informados.'},
+  {icon:'&#128226;',bg:'var(--am-c)',title:'Comunicados e novidades',text:'Chega de informacao perdida no WhatsApp. Todos os comunicados oficiais ficam aqui, organizados e acessiveis a qualquer hora.'},
+  {icon:'&#128193;',bg:'#F0FDF4',title:'Documentos sempre a mao',text:'Politicas, contratos, manuais e formularios reunidos em um so lugar.'},
+  {icon:'&#127891;',bg:'#FFF1F2',title:'Treinamentos por area',text:'RH, Financeiro, Engenharia, Compras - cada area tera seus guias de capacitacao.'},
+  {icon:'&#129489;',bg:'var(--azul-c)',title:'Abertura de vagas online',text:'Formulario de abertura de vagas envia direto ao RH com protocolo de acompanhamento.'},
+  {icon:'&#128155;',bg:'var(--am-c)',title:'Feita para voce',text:'Esta intranet e nossa - do Grupo Pez. Ela vai crescer junto com a empresa.'}
 ];
-var tourStep=0;
-function openTour(){tourStep=0;tourRender();openM('modalTour');}
-function tourRender(){
-  var d=tourData[tourStep];
-  document.getElementById('tourBody').innerHTML='<div style="background:'+d.bg+';border-radius:10px;padding:18px;text-align:center"><div style="font-size:32px;margin-bottom:7px">'+d.icon+'</div><div style="font-family:var(--ft);font-size:14px;font-weight:700;color:var(--azul);margin-bottom:7px">'+d.title+'</div><div style="font-size:12px;color:var(--muted);line-height:1.7">'+d.text+'</div></div>';
-  var dots='';for(var i=0;i<tourData.length;i++)dots+='<span class="td'+(i===tourStep?' active':'')+'"></span>';
-  document.getElementById('tourDots').innerHTML=dots;
-  document.getElementById('tourCounter').textContent=(tourStep+1)+' de '+tourData.length;
-  document.getElementById('tourPrev').style.visibility=tourStep===0?'hidden':'visible';
-  document.getElementById('tourNext').textContent=tourStep===tourData.length-1?'Concluir ✓':'Próximo →';
+var tourStep = 0;
+function openTour() { tourStep=0; tourRender(); openM('modalTour'); }
+function tourRender() {
+  var d = tourData[tourStep];
+  document.getElementById('tourBody').innerHTML = '<div style="background:'+d.bg+';border-radius:10px;padding:18px;text-align:center"><div style="font-size:32px;margin-bottom:7px">'+d.icon+'</div><div style="font-family:var(--ft);font-size:14px;font-weight:700;color:var(--azul);margin-bottom:7px">'+d.title+'</div><div style="font-size:12px;color:var(--muted);line-height:1.7">'+d.text+'</div></div>';
+  var dots=''; for(var i=0;i<tourData.length;i++) dots+='<span class="td'+(i===tourStep?' active':'')+'"></span>';
+  document.getElementById('tourDots').innerHTML = dots;
+  document.getElementById('tourCounter').textContent = (tourStep+1)+' de '+tourData.length;
+  document.getElementById('tourPrev').style.visibility = tourStep===0?'hidden':'visible';
+  document.getElementById('tourNext').textContent = tourStep===tourData.length-1?'Concluir':'Proximo';
 }
 document.getElementById('tourPrev').addEventListener('click',function(){if(tourStep>0){tourStep--;tourRender();}});
 document.getElementById('tourNext').addEventListener('click',function(){if(tourStep<tourData.length-1){tourStep++;tourRender();}else{closeM('modalTour');}});
 
-// ── FALE COM RH ──
-document.getElementById('btnCancelRH').addEventListener('click',function(){closeM('modalRH');document.getElementById('rhSucesso').style.display='none';['rhNome','rhEmail','rhMensagem'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('rhAssunto').selectedIndex=0;});
+document.getElementById('btnCancelRH').addEventListener('click',function(){
+  closeM('modalRH');
+  document.getElementById('rhSucesso').style.display='none';
+  ['rhNome','rhEmail','rhMensagem'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('rhAssunto').selectedIndex=0;
+});
 document.getElementById('btnSendRH').addEventListener('click',function(){
-  var nome=document.getElementById('rhNome').value.trim(),email=document.getElementById('rhEmail').value.trim(),assunto=document.getElementById('rhAssunto').value,msg=document.getElementById('rhMensagem').value.trim();
+  var nome=document.getElementById('rhNome').value.trim(), email=document.getElementById('rhEmail').value.trim();
+  var assunto=document.getElementById('rhAssunto').value, msg=document.getElementById('rhMensagem').value.trim();
   if(!nome||!email||!assunto||!msg){alert('Preencha todos os campos.');return;}
-  var btn=document.getElementById('btnSendRH');btn.disabled=true;btn.textContent='⏳ Enviando...';
-  var p=new FormData();p.append('_subject','[RH] '+assunto+' — '+nome);p.append('Nome',nome);p.append('Email',email);p.append('Assunto',assunto);p.append('Mensagem',msg);p.append('_replyto',email);
-  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='✉️ Enviar';if(r.ok){document.getElementById('rhSucesso').style.display='block';['rhNome','rhEmail','rhMensagem'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('rhAssunto').selectedIndex=0;}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='✉️ Enviar';alert('Erro de conexão.');});
+  var btn=document.getElementById('btnSendRH'); btn.disabled=true; btn.textContent='Enviando...';
+  var p=new FormData();
+  p.append('_subject','[RH] '+assunto+' - '+nome);
+  p.append('Nome',nome); p.append('Email',email); p.append('Assunto',assunto); p.append('Mensagem',msg); p.append('_replyto',email);
+  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar';if(r.ok){document.getElementById('rhSucesso').style.display='block';['rhNome','rhEmail','rhMensagem'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('rhAssunto').selectedIndex=0;}else{alert('Erro ao enviar.');}})
+  .catch(function(){btn.disabled=false;btn.textContent='Enviar';alert('Erro de conexao.');});
 });
 
-// ── PILLS & BADGES ──
-document.querySelectorAll('.vp[data-group]').forEach(function(p){p.addEventListener('click',function(){document.querySelectorAll('.vp[data-group="'+this.dataset.group+'"]').forEach(function(x){x.classList.remove('sel');});this.classList.add('sel');vProgress();});});
+document.querySelectorAll('.vp[data-group]').forEach(function(p){
+  p.addEventListener('click',function(){
+    document.querySelectorAll('.vp[data-group="'+this.dataset.group+'"]').forEach(function(x){x.classList.remove('sel');});
+    this.classList.add('sel'); vProgress();
+  });
+});
 document.querySelectorAll('#vSkills .vb').forEach(function(b){b.addEventListener('click',function(){this.classList.toggle('sel');});});
 
-// ── VAGAS ──
-var vReqIds=['vCargo','vDepto','vNumVagas','vTipoContrat','vPrazo','vResp','vMotivo','vSolicit','vEmail'];
-function vProgress(){var f=vReqIds.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim()!=='';}).length;var p=Math.round((f/vReqIds.length)*100);document.getElementById('vProgressBar').style.width=p+'%';document.getElementById('vProgressTxt').textContent=f+' de '+vReqIds.length+' campos obrigatórios';}
+var vReqIds = ['vCargo','vDepto','vNumVagas','vTipoContrat','vPrazo','vResp','vMotivo','vSolicit','vEmail'];
+function vProgress() {
+  var f=vReqIds.filter(function(id){var el=document.getElementById(id);return el&&el.value.trim()!=='';}).length;
+  var p=Math.round((f/vReqIds.length)*100);
+  document.getElementById('vProgressBar').style.width=p+'%';
+  document.getElementById('vProgressTxt').textContent=f+' de '+vReqIds.length;
+}
 vReqIds.forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',vProgress);el.addEventListener('change',vProgress);}});
 function vGetPill(g){var s=document.querySelector('.vp[data-group="'+g+'"].sel');return s?s.dataset.val:'';}
-function vGetSkills(){return Array.from(document.querySelectorAll('#vSkills .vb.sel')).map(function(b){return b.textContent.trim();}).join(', ')||'—';}
+function vGetSkills(){return Array.from(document.querySelectorAll('#vSkills .vb.sel')).map(function(b){return b.textContent.trim();}).join(', ')||'-';}
+
 document.getElementById('btnVSubmit').addEventListener('click',function(){
   var miss=vReqIds.filter(function(id){var el=document.getElementById(id);return !el||el.value.trim()==='';});
-  if(!vGetPill('vUrgGroup')){alert('Selecione a urgência.');return;}
-  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatórios (*).');return;}
+  if(!vGetPill('vUrgGroup')){alert('Selecione a urgencia.');return;}
+  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatorios.');return;}
   var prot='VAG-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
-  var now=new Date(),dfmt=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var entry={protocol:prot,dataFmt:dfmt,cargo:document.getElementById('vCargo').value.trim(),depto:document.getElementById('vDepto').value,numVagas:document.getElementById('vNumVagas').value,tipo:document.getElementById('vTipoContrat').value,prazo:document.getElementById('vPrazo').value?new Date(document.getElementById('vPrazo').value+'T12:00:00').toLocaleDateString('pt-BR'):'—',salario:document.getElementById('vSalario').value.trim()||'—',nivel:document.getElementById('vNivel').value||'—',modalidade:vGetPill('vModalGroup')||'—',resp:document.getElementById('vResp').value.trim(),skills:vGetSkills(),motivo:document.getElementById('vMotivo').value,urgencia:vGetPill('vUrgGroup'),justif:document.getElementById('vJustif').value.trim()||'—',solicit:document.getElementById('vSolicit').value.trim(),email:document.getElementById('vEmail').value.trim(),gestor:document.getElementById('vGestor').value.trim()||'—',emailGestor:document.getElementById('vEmailGestor').value.trim()||'—'};
-  vagasLog.unshift(entry);vRenderLog();
-  addNotif('🧑‍💼','Nova solicitação de vaga: '+entry.cargo,entry.depto+' · '+entry.urgencia+' · '+entry.dataFmt,'portalrh');
-  var btn=document.getElementById('btnVSubmit');btn.disabled=true;btn.textContent='⏳ Enviando...';
-  var p=new FormData();p.append('_subject','['+prot+'] Vaga: '+entry.cargo);p.append('Protocolo',prot);p.append('Cargo',entry.cargo);p.append('Departamento',entry.depto);p.append('Tipo',entry.tipo);p.append('Urgência',entry.urgencia);p.append('Solicitante',entry.solicit);p.append('Email',entry.email);p.append('_replyto',entry.email);
-  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='📨 Enviar para o RH';if(r.ok){document.getElementById('vFormBody').style.display='none';document.getElementById('vSuccess').style.display='block';document.getElementById('vProtocol').textContent=prot;}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='📨 Enviar para o RH';alert('Erro de conexão.');});
+  var now=new Date(), dfmt=now.toLocaleDateString('pt-BR')+' as '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var entry={protocol:prot,dataFmt:dfmt,cargo:document.getElementById('vCargo').value.trim(),depto:document.getElementById('vDepto').value,numVagas:document.getElementById('vNumVagas').value,tipo:document.getElementById('vTipoContrat').value,prazo:document.getElementById('vPrazo').value?new Date(document.getElementById('vPrazo').value+'T12:00:00').toLocaleDateString('pt-BR'):'-',salario:document.getElementById('vSalario').value.trim()||'-',nivel:document.getElementById('vNivel').value||'-',modalidade:vGetPill('vModalGroup')||'-',resp:document.getElementById('vResp').value.trim(),skills:vGetSkills(),motivo:document.getElementById('vMotivo').value,urgencia:vGetPill('vUrgGroup'),justif:document.getElementById('vJustif').value.trim()||'-',solicit:document.getElementById('vSolicit').value.trim(),email:document.getElementById('vEmail').value.trim(),gestor:document.getElementById('vGestor').value.trim()||'-',emailGestor:document.getElementById('vEmailGestor').value.trim()||'-'};
+  vagasLog.unshift(entry);
+  vRenderLog();
+  addNotif('&#129489;','Nova solicitacao de vaga: '+entry.cargo,entry.depto+' - '+entry.urgencia,'portalrh');
+  var btn=document.getElementById('btnVSubmit'); btn.disabled=true; btn.textContent='Enviando...';
+  var p=new FormData();
+  p.append('_subject','['+prot+'] Vaga: '+entry.cargo);
+  p.append('Protocolo',prot); p.append('Cargo',entry.cargo); p.append('Departamento',entry.depto); p.append('Tipo',entry.tipo); p.append('Urgencia',entry.urgencia); p.append('Solicitante',entry.solicit); p.append('Email',entry.email); p.append('_replyto',entry.email);
+  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar para o RH';if(r.ok){document.getElementById('vFormBody').style.display='none';document.getElementById('vSuccess').style.display='block';document.getElementById('vProtocol').textContent=prot;}else{alert('Erro ao enviar.');}})
+  .catch(function(){btn.disabled=false;btn.textContent='Enviar para o RH';alert('Erro de conexao.');});
 });
 document.getElementById('btnVClear').addEventListener('click',vClear);
 document.getElementById('btnVNew').addEventListener('click',function(){document.getElementById('vFormBody').style.display='block';document.getElementById('vSuccess').style.display='none';vClear();});
-function vClear(){if(!confirm('Limpar todos os campos?'))return;['vCargo','vSalario','vResp','vJustif','vSolicit','vEmail','vGestor','vEmailGestor','vPrazo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('vNumVagas').value='1';['vDepto','vTipoContrat','vNivel','vMotivo'].forEach(function(id){var el=document.getElementById(id);if(el)el.selectedIndex=0;});document.querySelectorAll('.vb.sel').forEach(function(b){b.classList.remove('sel');});document.querySelectorAll('.vp.sel').forEach(function(p){p.classList.remove('sel');});vProgress();}
+function vClear(){
+  if(!confirm('Limpar todos os campos?')) return;
+  ['vCargo','vSalario','vResp','vJustif','vSolicit','vEmail','vGestor','vEmailGestor','vPrazo'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('vNumVagas').value='1';
+  ['vDepto','vTipoContrat','vNivel','vMotivo'].forEach(function(id){var el=document.getElementById(id);if(el)el.selectedIndex=0;});
+  document.querySelectorAll('.vb.sel').forEach(function(b){b.classList.remove('sel');});
+  document.querySelectorAll('.vp.sel').forEach(function(p){p.classList.remove('sel');});
+  vProgress();
+}
 function vRenderLog(){
-  var list=document.getElementById('vLogList'),empty=document.getElementById('vLogEmpty'),cnt=document.getElementById('vLogCount');
+  var list=document.getElementById('vLogList'), empty=document.getElementById('vLogEmpty'), cnt=document.getElementById('vLogCount');
   if(!vagasLog.length){list.innerHTML='';empty.style.display='block';return;}
-  empty.style.display='none';cnt.textContent=vagasLog.length+(vagasLog.length===1?' envio':' envios');
-  var uc={Alta:'s-reprov',Média:'s-pend',Baixa:'s-aprov'};
-  list.innerHTML=vagasLog.map(function(e,i){return '<div class="vli"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px"><span class="vlp">'+e.protocol+'</span>'+(e.urgencia?'<span class="sb-badge '+(uc[e.urgencia]||'s-pend')+'">'+e.urgencia+'</span>':'')+'</div><div class="vln">'+e.cargo+'</div><div class="vlm">'+e.depto+' · '+e.tipo+'</div><div class="vlm">👤 '+e.solicit+' · '+e.dataFmt+'</div><div style="display:flex;gap:6px;margin-top:7px"><button onclick="enviarRetornoVaga(vagasLog['+i+'])" style="background:var(--azul);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;flex:1">📧 Retornar</button><button onclick="delVaga('+i+')" style="background:#FEE2E2;color:#DC2626;border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer">🗑️</button></div></div>';}).join('');
+  empty.style.display='none'; cnt.textContent=vagasLog.length+' envio'+(vagasLog.length!==1?'s':'');
+  list.innerHTML=vagasLog.map(function(e,i){
+    return '<div class="vli"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px"><span class="vlp">'+e.protocol+'</span></div>'
+      +'<div class="vln">'+e.cargo+'</div><div class="vlm">'+e.depto+' - '+e.tipo+'</div><div class="vlm">'+e.solicit+' - '+e.dataFmt+'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:7px"><button onclick="enviarRetornoVaga(vagasLog['+i+'])" style="background:var(--azul);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;flex:1">Retornar</button>'
+      +'<button onclick="delVaga('+i+')" style="background:#FEE2E2;color:#DC2626;border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer">&#128465;</button></div></div>';
+  }).join('');
 }
 function delVaga(i){if(!confirm('Excluir?'))return;vagasLog.splice(i,1);vRenderLog();}
-function enviarRetornoVaga(e){var s=encodeURIComponent('['+e.protocol+'] Solicitação de Vaga Recebida — '+e.cargo);var b=encodeURIComponent('Olá, '+e.solicit+'!\n\nSua solicitação de vaga foi recebida pelo RH.\n\nProtocolo: '+e.protocol+'\nCargo: '+e.cargo+'\nDepartamento: '+e.depto+'\nUrgência: '+e.urgencia+'\n\nO RH entrará em contato em breve.\n\nRH — Grupo Pez');window.location.href='mailto:'+e.email+'?subject='+s+'&body='+b;}
+function enviarRetornoVaga(e){
+  var s=encodeURIComponent('['+e.protocol+'] Solicitacao de Vaga - '+e.cargo);
+  var b=encodeURIComponent('Ola, '+e.solicit+'!\n\nSua solicitacao de vaga foi recebida.\n\nProtocolo: '+e.protocol+'\nCargo: '+e.cargo+'\n\nO RH entrara em contato.\n\nRH - Grupo Pez');
+  window.location.href='mailto:'+e.email+'?subject='+s+'&body='+b;
+}
 
-// ── UPLOADCARE ──
-function ucUpload(file,onOk,onErr){var fd=new FormData();fd.append('UPLOADCARE_PUB_KEY',UPLOADCARE_KEY);fd.append('UPLOADCARE_STORE','1');fd.append('file',file);fetch('https://upload.uploadcare.com/base/',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(d){if(d.file)onOk('https://ucarecdn.com/'+d.file+'/'+encodeURIComponent(file.name));else onErr('Erro');}).catch(onErr);}
+function ucUpload(file,onOk,onErr){
+  var fd=new FormData();
+  fd.append('UPLOADCARE_PUB_KEY',UC_KEY);
+  fd.append('UPLOADCARE_STORE','1');
+  fd.append('file',file);
+  fetch('https://upload.uploadcare.com/base/',{method:'POST',body:fd})
+  .then(function(r){return r.json();})
+  .then(function(d){if(d.file)onOk('https://ucarecdn.com/'+d.file+'/'+encodeURIComponent(file.name));else onErr('Erro');})
+  .catch(onErr);
+}
 
-// ── NF ──
-var nfPDFUrl='',nfXMLUrl='';
-document.getElementById('nfFilePDF').addEventListener('change',function(){var f=this.files[0];if(!f)return;document.getElementById('labelPDFTxt').textContent='⏳ '+f.name;document.getElementById('labelPDF').style.borderColor='var(--am)';ucUpload(f,function(u){nfPDFUrl=u;document.getElementById('labelPDFTxt').textContent='✅ '+f.name;document.getElementById('labelPDF').style.borderColor='#6EE7B7';},function(){document.getElementById('labelPDFTxt').textContent='❌ Erro';});});
-document.getElementById('nfFileXML').addEventListener('change',function(){var f=this.files[0];if(!f)return;document.getElementById('labelXMLTxt').textContent='⏳ '+f.name;document.getElementById('labelXML').style.borderColor='var(--am)';ucUpload(f,function(u){nfXMLUrl=u;document.getElementById('labelXMLTxt').textContent='✅ '+f.name;document.getElementById('labelXML').style.borderColor='#6EE7B7';},function(){document.getElementById('labelXMLTxt').textContent='❌ Erro';});});
+var nfPDFUrl='', nfXMLUrl='';
+document.getElementById('nfFilePDF').addEventListener('change',function(){
+  var f=this.files[0]; if(!f) return;
+  document.getElementById('labelPDFTxt').textContent='Enviando: '+f.name;
+  ucUpload(f,function(u){nfPDFUrl=u;document.getElementById('labelPDFTxt').textContent='OK: '+f.name;document.getElementById('labelPDF').style.borderColor='#6EE7B7';},function(){document.getElementById('labelPDFTxt').textContent='Erro no upload';});
+});
+document.getElementById('nfFileXML').addEventListener('change',function(){
+  var f=this.files[0]; if(!f) return;
+  document.getElementById('labelXMLTxt').textContent='Enviando: '+f.name;
+  ucUpload(f,function(u){nfXMLUrl=u;document.getElementById('labelXMLTxt').textContent='OK: '+f.name;document.getElementById('labelXML').style.borderColor='#6EE7B7';},function(){document.getElementById('labelXMLTxt').textContent='Erro no upload';});
+});
 document.getElementById('nfCancelada').addEventListener('change',function(){document.getElementById('nfCanceladaBox').style.display=this.checked?'block':'none';});
-document.getElementById('nfCnpj').addEventListener('input',function(){var v=this.value.replace(/\D/g,'').slice(0,14);v=v.replace(/^(\d{2})(\d)/,'$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d)/,'.$1/$2').replace(/(\d{4})(\d)/,'$1-$2');this.value=v;});
+document.getElementById('nfCnpj').addEventListener('input',function(){
+  var v=this.value.replace(/\D/g,'').slice(0,14);
+  v=v.replace(/^(\d{2})(\d)/,'$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d)/,'.$1/$2').replace(/(\d{4})(\d)/,'$1-$2');
+  this.value=v;
+});
 var nfReqIds=['nfNome','nfCnpj','nfEmail','nfObra','nfNumero','nfCompetencia','nfValor'];
 document.getElementById('btnNFSubmit').addEventListener('click',function(){
   var miss=nfReqIds.filter(function(id){var el=document.getElementById(id);return !el||el.value.trim()==='';});
-  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatórios (*).');return;}
+  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatorios.');return;}
   var prot='NF-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
   var entry={protocol:prot,nome:document.getElementById('nfNome').value.trim(),cnpj:document.getElementById('nfCnpj').value.trim(),email:document.getElementById('nfEmail').value.trim(),obra:document.getElementById('nfObra').value.trim(),numero:document.getElementById('nfNumero').value.trim(),competencia:document.getElementById('nfCompetencia').value,valor:document.getElementById('nfValor').value.trim(),pdfUrl:nfPDFUrl,xmlUrl:nfXMLUrl,link:document.getElementById('nfLink').value.trim(),data:new Date().toLocaleDateString('pt-BR'),status:'pendente'};
   nfLog.unshift(entry);
-  var btn=document.getElementById('btnNFSubmit');btn.disabled=true;btn.textContent='⏳ Enviando...';
-  var p=new FormData();p.append('_subject','['+prot+'] NF: '+entry.nome+' — '+entry.competencia);p.append('Protocolo',prot);p.append('Prestador',entry.nome);p.append('CNPJ',entry.cnpj);p.append('Competência',entry.competencia);p.append('Valor','R$ '+entry.valor);p.append('PDF',nfPDFUrl||'Não anexado');p.append('XML',nfXMLUrl||'Não anexado');p.append('Link',entry.link||'—');var canc=document.getElementById('nfCancelada').checked;p.append('NF Cancelada',canc?'SIM — '+(document.getElementById('nfCanceladaInfo').value.trim()||'Sem detalhes'):'Não');p.append('_replyto',entry.email);
-  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='📨 Enviar NF ao RH';if(r.ok){document.getElementById('nfFormBody').style.display='none';document.getElementById('nfSucesso').style.display='block';document.getElementById('nfProtocol').textContent=prot;nfPDFUrl='';nfXMLUrl='';}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='📨 Enviar NF ao RH';alert('Erro de conexão.');});
+  var btn=document.getElementById('btnNFSubmit'); btn.disabled=true; btn.textContent='Enviando...';
+  var p=new FormData();
+  p.append('_subject','['+prot+'] NF: '+entry.nome+' - '+entry.competencia);
+  p.append('Protocolo',prot); p.append('Prestador',entry.nome); p.append('CNPJ',entry.cnpj); p.append('Competencia',entry.competencia); p.append('Valor','R$ '+entry.valor); p.append('PDF',nfPDFUrl||'Nao anexado'); p.append('XML',nfXMLUrl||'Nao anexado'); p.append('Link',entry.link||'-');
+  var canc=document.getElementById('nfCancelada').checked;
+  p.append('NF Cancelada',canc?'SIM - '+(document.getElementById('nfCanceladaInfo').value.trim()||'Sem detalhes'):'Nao');
+  p.append('_replyto',entry.email);
+  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar NF ao RH';if(r.ok){document.getElementById('nfFormBody').style.display='none';document.getElementById('nfSucesso').style.display='block';document.getElementById('nfProtocol').textContent=prot;nfPDFUrl='';nfXMLUrl='';}else{alert('Erro ao enviar.');}})
+  .catch(function(){btn.disabled=false;btn.textContent='Enviar NF ao RH';alert('Erro de conexao.');});
 });
-document.getElementById('btnNFClear').addEventListener('click',function(){nfReqIds.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('nfDescricao').value='';document.getElementById('nfLink').value='';document.getElementById('nfCancelada').checked=false;document.getElementById('nfCanceladaBox').style.display='none';document.getElementById('labelPDFTxt').textContent='Clique para selecionar o PDF';document.getElementById('labelXMLTxt').textContent='Clique para selecionar o XML';nfPDFUrl='';nfXMLUrl='';});
+document.getElementById('btnNFClear').addEventListener('click',function(){
+  nfReqIds.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('nfDescricao').value=''; document.getElementById('nfLink').value='';
+  document.getElementById('nfCancelada').checked=false; document.getElementById('nfCanceladaBox').style.display='none';
+  document.getElementById('labelPDFTxt').textContent='Selecionar PDF'; document.getElementById('labelXMLTxt').textContent='Selecionar XML';
+  nfPDFUrl=''; nfXMLUrl='';
+});
 document.getElementById('btnNFNew').addEventListener('click',function(){document.getElementById('nfFormBody').style.display='block';document.getElementById('nfSucesso').style.display='none';document.getElementById('btnNFClear').click();});
 
-// ── FÉRIAS PJ ──
 var fpAutUrl='';
-function calcDiasFP(){var ini=document.getElementById('fpInicio').value,fim=document.getElementById('fpFim').value;if(!ini||!fim){document.getElementById('fpDias').textContent='—';return;}var d1=new Date(ini),d2=new Date(fim);if(d2<d1){document.getElementById('fpDias').textContent='⚠️ Inválido';return;}var dias=Math.round((d2-d1)/86400000)+1;document.getElementById('fpDias').textContent=dias+' dias';document.getElementById('fpDias').dataset.dias=dias;}
-document.getElementById('fpFileAut').addEventListener('change',function(){var f=this.files[0];if(!f)return;document.getElementById('labelAutTxt').textContent='⏳ '+f.name;document.getElementById('labelAutorizacao').style.borderColor='var(--am)';ucUpload(f,function(u){fpAutUrl=u;document.getElementById('labelAutTxt').textContent='✅ '+f.name;document.getElementById('labelAutorizacao').style.borderColor='#6EE7B7';},function(){document.getElementById('labelAutTxt').textContent='❌ Erro';});});
+function calcDiasFP(){
+  var ini=document.getElementById('fpInicio').value, fim=document.getElementById('fpFim').value;
+  if(!ini||!fim){document.getElementById('fpDias').textContent='-';return;}
+  var d1=new Date(ini), d2=new Date(fim);
+  if(d2<d1){document.getElementById('fpDias').textContent='Invalido';return;}
+  var dias=Math.round((d2-d1)/86400000)+1;
+  document.getElementById('fpDias').textContent=dias+' dias';
+  document.getElementById('fpDias').dataset.dias=dias;
+}
+document.getElementById('fpFileAut').addEventListener('change',function(){
+  var f=this.files[0]; if(!f) return;
+  document.getElementById('labelAutTxt').textContent='Enviando: '+f.name;
+  ucUpload(f,function(u){fpAutUrl=u;document.getElementById('labelAutTxt').textContent='OK: '+f.name;document.getElementById('labelAutorizacao').style.borderColor='#6EE7B7';},function(){document.getElementById('labelAutTxt').textContent='Erro';});
+});
 var fpReqIds=['fpNome','fpEmail','fpSetor','fpResponsavel','fpInicio','fpFim'];
 document.getElementById('btnFPSubmit').addEventListener('click',function(){
   var miss=fpReqIds.filter(function(id){var el=document.getElementById(id);return !el||el.value.trim()==='';});
-  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatórios (*).');return;}
+  if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatorios.');return;}
   var dias=parseInt(document.getElementById('fpDias').dataset.dias||0);
   if(!dias||dias<1){alert('Verifique as datas.');return;}
-  if(!fpAutUrl){alert('Anexe a autorização do responsável.');return;}
+  if(!fpAutUrl){alert('Anexe a autorizacao do responsavel.');return;}
   var prot='FER-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
-  var now=new Date(),nome=document.getElementById('fpNome').value.trim();
-  var colab=colaboradoresPJ.find(function(c){return c.nome.toLowerCase().includes(nome.toLowerCase())||nome.toLowerCase().includes(c.nome.toLowerCase());});
+  var now=new Date(), nome=document.getElementById('fpNome').value.trim();
+  var colab=colaboradoresPJ.find(function(c){return c.nome.toLowerCase().includes(nome.toLowerCase());});
   var disp=colab?parseInt(colab.diasDisponiveis||30):30;
   var usados=feriasLog.filter(function(f){return f.nome.toLowerCase()===nome.toLowerCase()&&f.status==='aprovado';}).reduce(function(a,f){return a+f.dias;},0);
-  var entry={protocol:prot,data:now.toLocaleDateString('pt-BR'),nome:nome,email:document.getElementById('fpEmail').value.trim(),setor:document.getElementById('fpSetor').value.trim(),responsavel:document.getElementById('fpResponsavel').value.trim(),inicio:document.getElementById('fpInicio').value,fim:document.getElementById('fpFim').value,dias:dias,obs:document.getElementById('fpObs').value.trim()||'—',autUrl:fpAutUrl,status:'pendente',justificativa:'',diasDisp:disp,saldoApos:disp-usados-dias};
+  var entry={protocol:prot,data:now.toLocaleDateString('pt-BR'),nome:nome,email:document.getElementById('fpEmail').value.trim(),setor:document.getElementById('fpSetor').value.trim(),responsavel:document.getElementById('fpResponsavel').value.trim(),inicio:document.getElementById('fpInicio').value,fim:document.getElementById('fpFim').value,dias:dias,obs:document.getElementById('fpObs').value.trim()||'-',autUrl:fpAutUrl,status:'pendente',justificativa:'',diasDisp:disp,saldoApos:disp-usados-dias};
   feriasLog.unshift(entry);
-  addNotif('🌴','Nova solicitação de férias: '+entry.nome,entry.dias+' dias · '+new Date(entry.inicio+'T12:00:00').toLocaleDateString('pt-BR')+' até '+new Date(entry.fim+'T12:00:00').toLocaleDateString('pt-BR'),'portalrh');
-  var btn=document.getElementById('btnFPSubmit');btn.disabled=true;btn.textContent='⏳ Enviando...';
-  var p=new FormData();p.append('_subject','['+prot+'] Férias PJ: '+entry.nome+' — '+entry.dias+' dias');p.append('Protocolo',prot);p.append('Colaborador',entry.nome);p.append('Período',entry.inicio+' até '+entry.fim);p.append('Dias',entry.dias);p.append('Saldo após',entry.saldoApos+(entry.saldoApos<0?' (NEGATIVO)':''));p.append('Autorização',entry.autUrl);p.append('_replyto',entry.email);
-  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}}).then(function(r){btn.disabled=false;btn.textContent='🌴 Enviar solicitação';if(r.ok){document.getElementById('feriasPJFormBody').style.display='none';document.getElementById('feriasPJSucesso').style.display='block';document.getElementById('fpProtocol').textContent=prot;fpAutUrl='';}else{alert('Erro ao enviar.');}}).catch(function(){btn.disabled=false;btn.textContent='🌴 Enviar solicitação';alert('Erro de conexão.');});
+  addNotif('&#127796;','Nova solicitacao de ferias: '+entry.nome,entry.dias+' dias','portalrh');
+  var btn=document.getElementById('btnFPSubmit'); btn.disabled=true; btn.textContent='Enviando...';
+  var p=new FormData();
+  p.append('_subject','['+prot+'] Ferias PJ: '+entry.nome);
+  p.append('Protocolo',prot); p.append('Colaborador',entry.nome); p.append('Periodo',entry.inicio+' ate '+entry.fim); p.append('Dias',entry.dias); p.append('Saldo apos',entry.saldoApos); p.append('Autorizacao',entry.autUrl); p.append('_replyto',entry.email);
+  fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar solicitacao';if(r.ok){document.getElementById('feriasPJFormBody').style.display='none';document.getElementById('feriasPJSucesso').style.display='block';document.getElementById('fpProtocol').textContent=prot;fpAutUrl='';}else{alert('Erro ao enviar.');}})
+  .catch(function(){btn.disabled=false;btn.textContent='Enviar solicitacao';alert('Erro de conexao.');});
 });
-document.getElementById('btnFPClear').addEventListener('click',function(){fpReqIds.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('fpObs').value='';document.getElementById('fpDias').textContent='—';delete document.getElementById('fpDias').dataset.dias;document.getElementById('labelAutTxt').textContent='Clique para selecionar a autorização';document.getElementById('labelAutorizacao').style.borderColor='var(--borda)';fpAutUrl='';});
+document.getElementById('btnFPClear').addEventListener('click',function(){fpReqIds.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('fpObs').value='';document.getElementById('fpDias').textContent='-';delete document.getElementById('fpDias').dataset.dias;document.getElementById('labelAutTxt').textContent='Selecionar autorizacao';document.getElementById('labelAutorizacao').style.borderColor='var(--borda)';fpAutUrl='';});
 document.getElementById('btnFPNew').addEventListener('click',function(){document.getElementById('feriasPJFormBody').style.display='block';document.getElementById('feriasPJSucesso').style.display='none';document.getElementById('btnFPClear').click();});
-function enviarRetornoFerias(e){var s=encodeURIComponent('['+e.protocol+'] Férias '+(e.status==='aprovado'?'✅ APROVADO':e.status==='reprovado'?'❌ REPROVADO':'⏳ PENDENTE')+' — '+e.nome);var b=encodeURIComponent('Olá, '+e.nome+'!\n\nSua solicitação de férias foi atualizada.\n\nProtocolo: '+e.protocol+'\nStatus: '+e.status.toUpperCase()+'\nPeríodo: '+new Date(e.inicio+'T12:00:00').toLocaleDateString('pt-BR')+' até '+new Date(e.fim+'T12:00:00').toLocaleDateString('pt-BR')+'\nDias: '+e.dias+(e.justificativa?'\nJustificativa: '+e.justificativa:'')+'\n\nDúvidas: RH@concretaeng.com.br\n\nRH — Grupo Pez');window.location.href='mailto:'+e.email+'?subject='+s+'&body='+b;}
+function enviarRetornoFerias(e){
+  var s=encodeURIComponent('['+e.protocol+'] Ferias '+e.status.toUpperCase()+' - '+e.nome);
+  var b=encodeURIComponent('Ola, '+e.nome+'!\n\nSua solicitacao de ferias foi atualizada.\nStatus: '+e.status.toUpperCase()+'\nPeriodo: '+e.inicio+' ate '+e.fim+'\nDias: '+e.dias+(e.justificativa?'\nJustificativa: '+e.justificativa:'')+'\n\nRH - Grupo Pez');
+  window.location.href='mailto:'+e.email+'?subject='+s+'&body='+b;
+}
 
-// ── PORTAL RH LOGIN ──
 document.getElementById('btnRHLogin').addEventListener('click',function(){
-  var email=document.getElementById('rhLoginEmail').value.trim(),senha=document.getElementById('rhLoginSenha').value;
+  var email=document.getElementById('rhLoginEmail').value.trim(), senha=document.getElementById('rhLoginSenha').value;
   var user=RH_USERS.find(function(u){return u.email.toLowerCase()===email.toLowerCase()&&u.senha===senha;});
   if(user){document.getElementById('rhLoginErro').style.display='none';document.getElementById('rhLoginScreen').style.display='none';document.getElementById('rhPortalContent').style.display='block';rhRenderNFs();}
   else{document.getElementById('rhLoginErro').style.display='block';document.getElementById('rhLoginSenha').value='';}
 });
 ['rhLoginEmail','rhLoginSenha'].forEach(function(id){document.getElementById(id).addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('btnRHLogin').click();});});
 document.getElementById('btnRHLogout').addEventListener('click',function(){document.getElementById('rhPortalContent').style.display='none';document.getElementById('rhLoginScreen').style.display='block';document.getElementById('rhLoginEmail').value='';document.getElementById('rhLoginSenha').value='';});
-document.querySelectorAll('.rht').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.rht').forEach(function(t){t.classList.remove('active');});this.classList.add('active');var t=this.dataset.tab;document.getElementById('rhTabNFs').style.display=t==='nfs'?'block':'none';document.getElementById('rhTabFerias').style.display=t==='ferias'?'block':'none';if(t==='ferias'){rhRenderFerias();if(!colaboradoresPJ.length)carregarPlanilha();}});});
+document.querySelectorAll('.rht').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.rht').forEach(function(t){t.classList.remove('active');});
+    this.classList.add('active');
+    var t=this.dataset.tab;
+    document.getElementById('rhTabNFs').style.display=t==='nfs'?'block':'none';
+    document.getElementById('rhTabFerias').style.display=t==='ferias'?'block':'none';
+    if(t==='ferias'){rhRenderFerias();if(!colaboradoresPJ.length)carregarPlanilha();}
+  });
+});
 
-// ── PORTAL RH NFs ──
-function rhRenderNFs(){var mes=new Date().toISOString().slice(0,7),total=nfLog.length,desteMs=nfLog.filter(function(n){return n.competencia===mes;}).length,pend=nfLog.filter(function(n){return n.status==='pendente';}).length;document.getElementById('rhStatTotal').textContent=total;document.getElementById('rhStatMes').textContent=desteMs;document.getElementById('rhStatPendente').textContent=pend;if(!total){document.getElementById('rhNFEmpty').style.display='block';document.getElementById('rhNFTable').style.display='none';return;}document.getElementById('rhNFEmpty').style.display='none';document.getElementById('rhNFTable').style.display='block';document.getElementById('rhNFBody').innerHTML=nfLog.map(function(n,i){var arq=n.pdfUrl?'<a href="'+n.pdfUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">📄 PDF</a>'+(n.xmlUrl?' <a href="'+n.xmlUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">📋 XML</a>':''):n.link?'<a href="'+n.link+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">📂 Ver</a>':'—';return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 14px"><div style="font-weight:700">'+n.nome+'</div><div style="font-size:10px;color:var(--muted)">'+n.cnpj+'</div></td><td style="padding:10px 14px">'+n.numero+'</td><td style="padding:10px 14px">'+n.competencia+'</td><td style="padding:10px 14px;font-weight:700">R$ '+n.valor+'</td><td style="padding:10px 14px">'+arq+'</td><td style="padding:10px 14px"><select class="fi" style="padding:3px 7px;font-size:10px;width:auto" onchange="nfChangeStatus('+i+',this.value)"><option value="pendente"'+(n.status==='pendente'?' selected':'')+'>⏳ Pendente</option><option value="recebida"'+(n.status==='recebida'?' selected':'')+'>✅ Recebida</option><option value="pago"'+(n.status==='pago'?' selected':'')+'>💰 Pago</option></select></td><td style="padding:10px 14px"><button onclick="delNF('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626">🗑️</button></td></tr>';}).join('');}
+function rhRenderNFs(){
+  var mes=new Date().toISOString().slice(0,7), total=nfLog.length;
+  var desteMs=nfLog.filter(function(n){return n.competencia===mes;}).length;
+  var pend=nfLog.filter(function(n){return n.status==='pendente';}).length;
+  document.getElementById('rhStatTotal').textContent=total;
+  document.getElementById('rhStatMes').textContent=desteMs;
+  document.getElementById('rhStatPendente').textContent=pend;
+  if(!total){document.getElementById('rhNFEmpty').style.display='block';document.getElementById('rhNFTable').style.display='none';return;}
+  document.getElementById('rhNFEmpty').style.display='none';document.getElementById('rhNFTable').style.display='block';
+  document.getElementById('rhNFBody').innerHTML=nfLog.map(function(n,i){
+    var arq=n.pdfUrl?'<a href="'+n.pdfUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">PDF</a>'+(n.xmlUrl?' <a href="'+n.xmlUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">XML</a>':''):n.link?'<a href="'+n.link+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">Ver</a>':'-';
+    return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 14px"><div style="font-weight:700">'+n.nome+'</div><div style="font-size:10px;color:var(--muted)">'+n.cnpj+'</div></td><td style="padding:10px 14px">'+n.numero+'</td><td style="padding:10px 14px">'+n.competencia+'</td><td style="padding:10px 14px;font-weight:700">R$ '+n.valor+'</td><td style="padding:10px 14px">'+arq+'</td><td style="padding:10px 14px"><select class="fi" style="padding:3px 7px;font-size:10px;width:auto" onchange="nfChangeStatus('+i+',this.value)"><option value="pendente"'+(n.status==='pendente'?' selected':'')+'>Pendente</option><option value="recebida"'+(n.status==='recebida'?' selected':'')+'>Recebida</option><option value="pago"'+(n.status==='pago'?' selected':'')+'>Pago</option></select></td><td style="padding:10px 14px"><button onclick="delNF('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626">&#128465;</button></td></tr>';
+  }).join('');
+}
 function nfChangeStatus(i,v){nfLog[i].status=v;rhRenderNFs();}
-function delNF(i){if(!confirm('Excluir NF de "'+nfLog[i].nome+'"?'))return;nfLog.splice(i,1);rhRenderNFs();}
+function delNF(i){if(!confirm('Excluir NF?'))return;nfLog.splice(i,1);rhRenderNFs();}
 
-// ── PORTAL RH FÉRIAS ──
 function rhRenderFerias(){
-  var total=feriasLog.length,pend=feriasLog.filter(function(f){return f.status==='pendente';}).length,aprov=feriasLog.filter(function(f){return f.status==='aprovado';}).length,reprov=feriasLog.filter(function(f){return f.status==='reprovado';}).length;
+  var total=feriasLog.length;
+  var pend=feriasLog.filter(function(f){return f.status==='pendente';}).length;
+  var aprov=feriasLog.filter(function(f){return f.status==='aprovado';}).length;
+  var reprov=feriasLog.filter(function(f){return f.status==='reprovado';}).length;
   document.getElementById('fpStatTotal').textContent=total;document.getElementById('fpStatPend').textContent=pend;document.getElementById('fpStatAprov').textContent=aprov;document.getElementById('fpStatReprov').textContent=reprov;
   renderTabelaColabs();
   if(!total){document.getElementById('fpEmpty').style.display='block';document.getElementById('fpTable').style.display='none';return;}
   document.getElementById('fpEmpty').style.display='none';document.getElementById('fpTable').style.display='block';
   document.getElementById('fpTableBody').innerHTML=feriasLog.map(function(f,i){
-    var ini=new Date(f.inicio+'T12:00:00').toLocaleDateString('pt-BR'),fim=new Date(f.fim+'T12:00:00').toLocaleDateString('pt-BR');
+    var ini=new Date(f.inicio+'T12:00:00').toLocaleDateString('pt-BR');
+    var fim=new Date(f.fim+'T12:00:00').toLocaleDateString('pt-BR');
     var sc=f.saldoApos<0?'color:#991B1B;font-weight:800':'color:#065F46;font-weight:700';
-    var sl=f.saldoApos<0?'⚠️ '+f.saldoApos:f.saldoApos+' dias';
-    return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 12px"><div style="font-weight:700">'+f.nome+'</div><div style="font-size:10px;color:var(--muted)">'+f.setor+'</div></td><td style="padding:10px 12px;font-size:11px">'+ini+' → '+fim+'</td><td style="padding:10px 12px;text-align:center;font-weight:800;font-size:14px;color:var(--azul)">'+f.dias+'</td><td style="padding:10px 12px;text-align:center;font-size:13px;'+sc+'">'+sl+'</td><td style="padding:10px 12px">'+(f.autUrl?'<a href="'+f.autUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">📋 Ver</a>':'—')+'</td>'
-    +'<td style="padding:10px 12px;min-width:180px"><select class="fi" style="padding:3px 7px;font-size:10px;width:auto;margin-bottom:5px" onchange="fpChangeStatus('+i+',this.value)"><option value="pendente"'+(f.status==='pendente'?' selected':'')+'>⏳ Pendente</option><option value="aprovado"'+(f.status==='aprovado'?' selected':'')+'>✅ Aprovado</option><option value="reprovado"'+(f.status==='reprovado'?' selected':'')+'>❌ Reprovado</option></select><textarea class="fi" style="font-size:10px;padding:4px 7px;min-height:40px;resize:none;margin-bottom:4px" placeholder="Justificativa..." onchange="fpSaveJust('+i+',this.value)">'+f.justificativa+'</textarea><button onclick="enviarRetornoFerias(feriasLog['+i+'])" style="background:var(--azul);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;width:100%">📧 Notificar</button></td>'
-    +'<td style="padding:10px 12px"><button onclick="delFerias('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626">🗑️</button></td></tr>';
+    var sl=f.saldoApos<0?'Neg: '+f.saldoApos:f.saldoApos+' dias';
+    return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 12px"><div style="font-weight:700">'+f.nome+'</div><div style="font-size:10px;color:var(--muted)">'+f.setor+'</div></td>'
+      +'<td style="padding:10px 12px;font-size:11px">'+ini+' a '+fim+'</td>'
+      +'<td style="padding:10px 12px;text-align:center;font-weight:800;font-size:14px;color:var(--azul)">'+f.dias+'</td>'
+      +'<td style="padding:10px 12px;text-align:center;font-size:13px;'+sc+'">'+sl+'</td>'
+      +'<td style="padding:10px 12px">'+(f.autUrl?'<a href="'+f.autUrl+'" target="_blank" style="color:var(--azul-m);font-size:10px;font-weight:700">Ver</a>':'-')+'</td>'
+      +'<td style="padding:10px 12px;min-width:180px">'
+        +'<select class="fi" style="padding:3px 7px;font-size:10px;width:auto;margin-bottom:5px" onchange="fpChangeStatus('+i+',this.value)">'
+          +'<option value="pendente"'+(f.status==='pendente'?' selected':'')+'>Pendente</option>'
+          +'<option value="aprovado"'+(f.status==='aprovado'?' selected':'')+'>Aprovado</option>'
+          +'<option value="reprovado"'+(f.status==='reprovado'?' selected':'')+'>Reprovado</option>'
+        +'</select>'
+        +'<textarea class="fi" style="font-size:10px;padding:4px 7px;min-height:40px;resize:none;margin-bottom:4px;display:block" placeholder="Justificativa..." onchange="fpSaveJust('+i+',this.value)">'+f.justificativa+'</textarea>'
+        +'<button onclick="enviarRetornoFerias(feriasLog['+i+'])" style="background:var(--azul);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;width:100%">Notificar</button>'
+      +'</td>'
+      +'<td style="padding:10px 12px"><button onclick="delFerias('+i+')" style="background:none;border:none;cursor:pointer;font-size:15px;color:#DC2626">&#128465;</button></td></tr>';
   }).join('');
 }
 function fpChangeStatus(i,v){feriasLog[i].status=v;feriasLog.forEach(function(f){var u=feriasLog.filter(function(g){return g.nome.toLowerCase()===f.nome.toLowerCase()&&g.status==='aprovado';}).reduce(function(a,g){return a+g.dias;},0);f.saldoApos=f.diasDisp-u-f.dias;});renderTabelaColabs();rhRenderFerias();}
 function fpSaveJust(i,v){feriasLog[i].justificativa=v;}
-function delFerias(i){if(!confirm('Excluir solicitação?'))return;feriasLog.splice(i,1);renderTabelaColabs();rhRenderFerias();}
+function delFerias(i){if(!confirm('Excluir solicitacao?'))return;feriasLog.splice(i,1);renderTabelaColabs();rhRenderFerias();}
 function renderTabelaColabs(){
-  if(!colaboradoresPJ.length){document.getElementById('tabelaColabBody').innerHTML='<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Suba o arquivo <strong>colaboradores-pj.xlsx</strong> no GitHub.</td></tr>';return;}
-  document.getElementById('tabelaColabBody').innerHTML=colaboradoresPJ.map(function(c){var u=feriasLog.filter(function(f){return f.nome.toLowerCase().includes(c.nome.toLowerCase())&&f.status==='aprovado';}).reduce(function(a,f){return a+f.dias;},0);var s=parseInt(c.diasDisponiveis||30)-u;var sb=s<0?'background:#FEE2E2;color:#991B1B':s<=5?'background:#FEF9C3;color:#854D0E':'background:#D1FAE5;color:#065F46';return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 14px;font-weight:700">'+c.nome+'</td><td style="padding:10px 14px;font-size:11px;color:var(--muted)">'+c.setor+'</td><td style="padding:10px 14px;font-size:11px">'+c.inicioContrato+'</td><td style="padding:10px 14px;text-align:center;font-weight:700">'+c.diasDisponiveis+'</td><td style="padding:10px 14px;text-align:center">'+u+'</td><td style="padding:10px 14px;text-align:center"><span style="'+sb+';font-size:14px;font-weight:900;padding:4px 14px;border-radius:7px">'+s+(s<0?' ⚠️':'')+'</span></td></tr>';}).join('');
+  if(!colaboradoresPJ.length){document.getElementById('tabelaColabBody').innerHTML='<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Suba colaboradores-pj.xlsx no GitHub.</td></tr>';return;}
+  document.getElementById('tabelaColabBody').innerHTML=colaboradoresPJ.map(function(c){
+    var u=feriasLog.filter(function(f){return f.nome.toLowerCase().includes(c.nome.toLowerCase())&&f.status==='aprovado';}).reduce(function(a,f){return a+f.dias;},0);
+    var s=parseInt(c.diasDisponiveis||30)-u;
+    var sb=s<0?'background:#FEE2E2;color:#991B1B':s<=5?'background:#FEF9C3;color:#854D0E':'background:#D1FAE5;color:#065F46';
+    return '<tr style="border-bottom:1px solid var(--borda)"><td style="padding:10px 14px;font-weight:700">'+c.nome+'</td><td style="padding:10px 14px;font-size:11px;color:var(--muted)">'+c.setor+'</td><td style="padding:10px 14px;font-size:11px">'+c.inicioContrato+'</td><td style="padding:10px 14px;text-align:center;font-weight:700">'+c.diasDisponiveis+'</td><td style="padding:10px 14px;text-align:center">'+u+'</td><td style="padding:10px 14px;text-align:center"><span style="'+sb+';font-size:14px;font-weight:900;padding:4px 14px;border-radius:7px">'+s+(s<0?' !':'')+'</span></td></tr>';
+  }).join('');
 }
 function carregarPlanilha(){
-  document.getElementById('planilhaStatus').textContent='⏳ Carregando...';
-  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/colaboradores-pj.xlsx').then(function(r){if(!r.ok)throw new Error('404');return r.arrayBuffer();}).then(function(buf){
+  document.getElementById('planilhaStatus').textContent='Carregando...';
+  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/colaboradores-pj.xlsx')
+  .then(function(r){if(!r.ok)throw new Error('404');return r.arrayBuffer();})
+  .then(function(buf){
     var wb=XLSX.read(buf,{type:'array',cellDates:true}),ws=wb.Sheets[wb.SheetNames[0]],data=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
     colaboradoresPJ=data.filter(function(r){return String(r['CODSITUACAO']||'').trim().toUpperCase()==='A';}).map(function(row){
       var nome=row['NOME']||row['nome']||'';
       var setor=row['CARGO']||row['SETOR']||row['setor']||'';
       var inicio=row['DATAADMISSAO']||row['Data Inicio']||'';
-      var dias=row['Dias Disponíveis']||row['Dias']||30;
+      var dias=row['Dias Disponiveis']||row['Dias']||30;
       if(inicio&&typeof inicio==='number'){var d=XLSX.SSF.parse_date_code(inicio);inicio=d.d+'/'+(d.m<10?'0':'')+d.m+'/'+d.y;}
       return{nome:String(nome),setor:String(setor),inicioContrato:String(inicio),diasDisponiveis:parseInt(dias)||30};
     }).filter(function(c){return c.nome.trim()!=='';});
-    document.getElementById('planilhaStatus').textContent='✅ '+colaboradoresPJ.length+' colaboradores';
+    document.getElementById('planilhaStatus').textContent='OK: '+colaboradoresPJ.length+' colaboradores';
     renderTabelaColabs();
-  }).catch(function(){document.getElementById('planilhaStatus').textContent='❌ Planilha não encontrada';});
+  }).catch(function(){document.getElementById('planilhaStatus').textContent='Planilha nao encontrada';});
 }
 
-// ── ANIVERSARIANTES ──
 function getIniciais(nome){
   var p=String(nome||'').trim().split(' ').filter(function(x){return x.length>1;});
   return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():String(nome||'?')[0].toUpperCase();
 }
-function parseDate(val){
-  if(!val)return null;
-  if(val instanceof Date)return val;
+
+function extrairData(val){
+  if(!val) return null;
+  if(val instanceof Date) return val;
   var s=String(val).trim();
-  var p=s.split('/');if(p.length===3)return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
-  var p2=s.split('-');if(p2.length===3)return new Date(parseInt(p2[0]),parseInt(p2[1])-1,parseInt(p2[2]));
+  if(s.indexOf(' ')>-1) s=s.split(' ')[0];
+  var p=s.split('/');
+  if(p.length===3) return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
+  var p2=s.split('-');
+  if(p2.length===3) return new Date(parseInt(p2[0]),parseInt(p2[1])-1,parseInt(p2[2]));
   return null;
 }
-function getIniciais(nome){var p=String(nome||'').trim().split(' ').filter(function(x){return x.length>1;});return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():String(nome||'?')[0].toUpperCase();}
+
 function carregarAniversariantes(){
-  var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  var hoje=new Date(),mes=hoje.getMonth(),dia=hoje.getDate();
+  var meses=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var hoje=new Date(), mes=hoje.getMonth(), dia=hoje.getDate();
+  var cores=['#002D72','#003F9E','#1a7a30','#854D0E','#065F46','#6B21A8'];
+
+  function renderItem(p, tipo){
+    var cor=cores[p.nome.charCodeAt(0)%cores.length];
+    var ini=getIniciais(p.nome);
+    var sub=(p.sub&&p.sub!='\\N'&&p.sub!='')?'<div style="font-size:10px;color:var(--muted)">'+p.sub+'</div>':'';
+    var badge=p.hoje?'<span class="aniv-badge ab-hoje">Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>';
+    var extra=tipo==='empresa'?'<span class="aniv-badge ab-anos">'+p.anos+' ano'+(p.anos>1?'s':'')+'</span>':'';
+    return '<div class="aniv-item">'
+      +'<div class="aniv-av" style="background:'+cor+'">'+ini+'</div>'
+      +'<div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+sub+'</div>'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">'+extra+badge+'</div>'
+      +'</div>';
+  }
+
   fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/aniversariantes.xlsx')
-    // Aniversários de nascimento
+  .then(function(r){if(!r.ok) throw new Error('404'); return r.arrayBuffer();})
+  .then(function(buf){
+    var wb=XLSX.read(buf,{type:'array',cellDates:true});
+    var ws=wb.Sheets[wb.SheetNames[0]];
+    var data=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
+    var ativos=data.filter(function(row){return String(row['CODSITUACAO']||'').trim().toUpperCase()==='A';});
+
     var nascMes=[];
-    ativos.forEach(function(r){
-      var nome=String(r['NOME']||r['Nome']||r['nome']||r['COLABORADOR']||'').trim();
-      var cargo=String(r['CARGO']||r['Cargo']||r['cargo']||r['FUNCAO']||r['SETOR']||'').trim();
-      var dtRaw=r['DTNASCIMENTO']||r['DT_NASCIMENTO']||r['NASCIMENTO']||r['DT NASCIMENTO']||r['DATA NASCIMENTO']||r['DataNascimento']||'';
-      if(typeof dtRaw==='number')dtRaw=XLSX.SSF.parse_date_code(dtRaw);
-      var d=dtRaw instanceof Date?dtRaw:parseDate(String(dtRaw));
-      if(!d||isNaN(d)||!nome)return;
-      if(d.getMonth()===mes)nascMes.push({nome:nome,cargo:cargo,dia:d.getDate(),hoje:d.getDate()===dia});
+    ativos.forEach(function(row){
+      var nome=String(row['NOME']||'').trim();
+      var sub=String(row['APELIDO']||'').trim();
+      var dtRaw=row['DTNASCIMENTO'];
+      if(typeof dtRaw==='number') dtRaw=XLSX.SSF.parse_date_code(dtRaw);
+      var d=extrairData(dtRaw);
+      if(!d||isNaN(d.getTime())||!nome) return;
+      if(d.getMonth()===mes) nascMes.push({nome:nome,sub:sub,dia:d.getDate(),hoje:d.getDate()===dia});
     });
     nascMes.sort(function(a,b){return a.dia-b.dia;});
-    var cores=['#002D72','#003F9E','#1a7a30','#854D0E','#065F46','#6B21A8'];
-    document.getElementById('anivMesLabel').textContent=meses[mes]+' · '+nascMes.length+' aniversariante'+(nascMes.length!==1?'s':'');
-    if(nascMes.length){
-      document.getElementById('anivMesList').innerHTML='<div style="max-height:300px;overflow-y:auto">'+nascMes.map(function(p){
-        var cor=cores[p.nome.charCodeAt(0)%cores.length];
-        var badge=p.hoje?'<span class="aniv-badge ab-hoje">&#x1F382; Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>';
-        return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.sub&&p.sub!=='\\N'?'<div style="font-size:10px;color:var(--muted)">'+p.sub+'</div>':'')+'</div>'+badge+'</div>';
-      }).join('')+'</div>';
-    } else {
-      document.getElementById('anivMesList').innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversariante este mes.</div>';
-    }
-    // Aniversários de empresa
+    document.getElementById('anivMesLabel').textContent=meses[mes]+' - '+nascMes.length;
+    document.getElementById('anivMesList').innerHTML=nascMes.length
+      ?'<div style="max-height:300px;overflow-y:auto">'+nascMes.map(function(p){return renderItem(p,'nasc');}).join('')+'</div>'
+      :'<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversariante este mes.</div>';
+
     var empMes=[];
-    ativos.forEach(function(r){
-      var nome=String(r['NOME']||'').trim();
-      var apelido=String(r['APELIDO']||'').trim();
-      var dtRaw=r['DATAADMISSAO']||'';
-      if(typeof dtRaw==='number')dtRaw=XLSX.SSF.parse_date_code(dtRaw);
-      if(typeof dtRaw==='string'&&dtRaw.indexOf(' ')>-1)dtRaw=dtRaw.split(' ')[0];
-      var d=dtRaw instanceof Date?dtRaw:parseDate(String(dtRaw));
-      if(!d||isNaN(d)||!nome)return;
-      var anos=hoje.getFullYear()-d.getFullYear();
-      if(d.getMonth()===mes&&anos>0)empMes.push({nome:nome,sub:apelido,dia:d.getDate(),anos:anos,hoje:d.getDate()===dia});
+    ativos.forEach(function(row){
+      var nome=String(row['NOME']||'').trim();
+      var sub=String(row['APELIDO']||'').trim();
+      var dtRaw=row['DATAADMISSAO'];
+      if(typeof dtRaw==='number') dtRaw=XLSX.SSF.parse_date_code(dtRaw);
+      var d=extrairData(dtRaw);
+      if(!d||isNaN(d.getTime())||!nome) return;
+      if(d.getMonth()===mes){
+        var anos=hoje.getFullYear()-d.getFullYear();
+        empMes.push({nome:nome,sub:sub,dia:d.getDate(),hoje:d.getDate()===dia,anos:anos});
+      }
     });
     empMes.sort(function(a,b){return a.dia-b.dia;});
-    document.getElementById('anivEmpLabel').textContent=meses[mes]+' · '+empMes.length+' colaborador'+(empMes.length!==1?'es':'');
-    if(empMes.length){
-      document.getElementById('anivEmpList').innerHTML='<div style="max-height:300px;overflow-y:auto">'+empMes.map(function(p){
-        var cor=cores[p.nome.charCodeAt(0)%cores.length];
-        var badge=p.hoje?'<span class="aniv-badge ab-hoje">Hoje!</span>':'<span class="aniv-badge ab-mes">Dia '+p.dia+'</span>';
-        return '<div class="aniv-item"><div class="aniv-av" style="background:'+cor+'">'+getIniciais(p.nome)+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--texto)">'+p.nome+'</div>'+(p.sub&&p.sub!=='\\N'?'<div style="font-size:10px;color:var(--muted)">'+p.sub+'</div>':'')+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="aniv-badge ab-anos">&#x1F3C6; '+p.anos+' ano'+(p.anos>1?'s':'')+'</span>'+badge+'</div></div>';
-      }).join('')+'</div>';
-    } else {
-      document.getElementById('anivEmpList').innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversario de empresa este mes.</div>';
-    }
-  }).catch(function(){
-    document.getElementById('anivMesList').innerHTML='<div style="font-size:11px;color:var(--muted);text-align:center;padding:12px">Planilha não encontrada.</div>';
-    document.getElementById('anivEmpList').innerHTML='<div style="font-size:11px;color:var(--muted);text-align:center;padding:12px">Planilha não encontrada.</div>';
+    document.getElementById('anivEmpLabel').textContent=meses[mes]+' - '+empMes.length;
+    document.getElementById('anivEmpList').innerHTML=empMes.length
+      ?'<div style="max-height:300px;overflow-y:auto">'+empMes.map(function(p){return renderItem(p,'empresa');}).join('')+'</div>'
+      :'<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Nenhum aniversario de empresa este mes.</div>';
+  })
+  .catch(function(){
+    document.getElementById('anivMesList').innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">Planilha nao encontrada.</div>';
+    document.getElementById('anivEmpList').innerHTML='';
   });
 }
 
-// ── INIT ──
-(function(){
-  document.getElementById('tbDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  vProgress();
-  renderBanner();
-  renderHome();
-  carregarAniversariantes();
-})();
+// Init
+renderHome();
+renderNoticias();
+renderCal();
+renderBanner();
+carregarAniversariantes();
+addNotif('&#127881;','Bem-vindo a intranet do Grupo Pez!','Clique para ver o tour.','home');
+
 </script>
 </body>
 </html>
