@@ -174,6 +174,8 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 @media(max-width:900px){.hbg{display:flex}}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .ov.open{display:block}
+#bannerDinamico{width:100%}
+#bannerDinamico #arraiabanner{border-radius:0!important}
 </style>
 </head>
 <body>
@@ -210,6 +212,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 <button class="hbg" id="hbg">&#9776;</button>
 
 <main class="main">
+  <div id="bannerDinamico"></div>
   <div class="topbar">
     <div class="tb-title" id="tbTitle">Inicio</div>
     <div class="tb-right">
@@ -228,7 +231,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <div id="bannerDinamico" style="margin-bottom:24px"></div>
     <a href="Informativo Grupo PEZ (2026).pdf" target="_blank" style="text-decoration:none;display:block;margin-bottom:24px">
       <div style="background:linear-gradient(135deg,var(--azul),var(--azul-m));border-radius:var(--rl);padding:20px 28px;display:flex;align-items:center;gap:20px;box-shadow:var(--shh)">
         <div style="background:#fff;border-radius:9px;width:64px;height:80px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
@@ -701,6 +703,7 @@ function renderBanner() {
   var el = document.getElementById('bannerDinamico');
   if (!el) return;
   var isFesta = new Date() < new Date(2026,5,20);
+  var topbar = document.querySelector('.topbar');
   if (isFesta) {
     el.innerHTML = '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:row;align-items:stretch;width:100%;min-height:220px">'
       + '<div style="flex:0 0 auto;max-width:38%;display:flex;align-items:center;justify-content:center;overflow:hidden">'
@@ -720,7 +723,11 @@ function renderBanner() {
       + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="font-size:13px;padding:8px 18px;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.3)">&#10084; <span style="font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.18);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
       + '</div>'
       + '</div></div>';
+    if(topbar) topbar.style.display='none';
+    el.style.marginBottom='0';
   } else {
+    if(topbar) topbar.style.display='';
+    el.style.marginBottom='0';
     el.innerHTML = '<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden">'
       + '<div style="position:relative;z-index:1"><div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:7px">Portal Corporativo Interno</div>'
       + '<div style="font-family:var(--ft);font-size:32px;font-weight:700;color:#fff;margin-bottom:7px">Grupo Pez</div>'
@@ -788,8 +795,10 @@ function nav(page) {
   var ni = document.querySelector('.ni[data-page="' + page + '"]');
   if (ni) ni.classList.add('active');
   document.getElementById('tbTitle').textContent = PT[page] || page;
+  if(page !== 'home') { var tb=document.querySelector('.topbar'); if(tb) tb.style.display=''; }
+  else { var isFesta2=new Date()<new Date(2026,5,20); var ph=document.getElementById('page-home'); if(ph) ph.style.paddingTop=isFesta2?'0':''; }
   closeSB();
-  if (page === 'home') renderHome();
+  if (page === 'home') { renderHome(); renderBanner(); }
   if (page === 'noticias') renderNoticias();
   if (page === 'calendario') renderCal();
 }
@@ -830,6 +839,9 @@ document.addEventListener('click', function(e) {
 });
 
 function renderHome() {
+  var pageHome = document.getElementById('page-home');
+  var isFesta = new Date() < new Date(2026,5,20);
+  if (pageHome) pageHome.style.paddingTop = isFesta ? '0' : '';
   var nl = document.getElementById('homeNewsList');
   nl.innerHTML = noticias.slice(0,3).map(function(n) {
     var action = n.tour ? 'onclick="openTour()"' : n.rh ? 'onclick="openM(\'modalRH\')"' : 'onclick="nav(\'noticias\')"';
@@ -1270,7 +1282,7 @@ function carregarAniversariantes(){
       +'</div>';
   }
 
-  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/aniversariantes.xlsx')
+  fetch('https://raw.githubusercontent.com/GrupoPez/intranet-grupopez/main/Aniversariantes.xlsx')
   .then(function(r){if(!r.ok) throw new Error('404'); return r.arrayBuffer();})
   .then(function(buf){
     var wb=XLSX.read(buf,{type:'array',cellDates:true});
