@@ -699,11 +699,21 @@ function renderBanner() {
   if (!el) return;
   var isFesta = new Date() < new Date(2026,5,20);
   if (isFesta) {
-    el.innerHTML = '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:column;align-items:center;margin-bottom:4px">'
-      + '<img src="festa-junina.jpeg" alt="Arraial do Grupo Pez" style="width:100%;max-height:270px;object-fit:cover;object-position:center 20%;display:block;border-radius:14px 14px 0 0" onerror="this.style.display=\'none\'">'
-      + '<div style="width:100%;background:rgba(10,6,30,.92);border-radius:0 0 14px 14px;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px">'
+    el.innerHTML = '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:row;align-items:stretch;width:100%">'
+      + '<img src="festa-junina.jpeg" alt="Arraial do Grupo Pez" style="width:auto;height:320px;object-fit:contain;display:block;flex-shrink:0" onerror="this.style.display=\'none\'">'
+      + '<div style="flex:1;background:#0a0d2e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px">'
+      + '<div style="text-align:center">'
+      + '<div style="font-family:var(--ft);font-size:22px;font-weight:900;color:#FFD700;letter-spacing:.02em">&#127881; Arraial do Grupo Pez</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:8px;line-height:1.7">'
+      + '&#128197; <strong style="color:#fff">19 de Junho</strong> &nbsp;|&nbsp; &#128336; <strong style="color:#fff">19h</strong><br>'
+      + '&#128205; Estacionamento - Rua Santo Andre'
+      + '</div>'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:6px">Traje tipico obrigatorio &#127831;</div>'
+      + '</div>'
+      + '<div style="display:flex;gap:12px">'
       + '<button class="br" id="btnLike" onclick="doReact(\'like\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">&#128077; <span style="font-size:15px;font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
       + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)">&#10084; <span style="font-size:15px;font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:700;color:#fff">0</span></button>'
+      + '</div>'
       + '</div></div>';
   } else {
     el.innerHTML = '<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden">'
