@@ -705,23 +705,12 @@ function renderBanner() {
   var isFesta = new Date() < new Date(2026,5,20);
   var topbar = document.querySelector('.topbar');
   if (isFesta) {
-    el.innerHTML = '<div id="arraiabanner" style="border-radius:14px;overflow:hidden;background:#0a0d2e;display:flex;flex-direction:row;align-items:stretch;width:100%;min-height:220px">'
-      + '<div style="flex:0 0 auto;max-width:38%;display:flex;align-items:center;justify-content:center;overflow:hidden">'
-      + '<img src="festa-junina.jpeg" alt="Arraial do Grupo Pez" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block" onerror="this.parentElement.style.display=\'none\'">'
-      + '</div>'
-      + '<div style="flex:1;background:linear-gradient(135deg,#0d1545 0%,#0a0d2e 100%);padding:24px 32px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px">'
-      + '<div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--am);margin-bottom:2px">Evento Corporativo</div>'
-      + '<div style="font-family:var(--ft);font-size:22px;font-weight:900;color:#fff;line-height:1.2">&#127881; Arraial do Grupo Pez</div>'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.65);display:flex;flex-wrap:wrap;gap:12px;align-items:center">'
-      + '<span>&#128197; <strong style="color:#fff">19 de Junho</strong></span>'
-      + '<span>&#128336; <strong style="color:#fff">19h</strong></span>'
-      + '<span>&#128205; Estacionamento - Rua Santo Andre</span>'
-      + '</div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.40)">Traje tipico obrigatorio &#127831;</div>'
-      + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">'
-      + '<button class="br" id="btnLike" onclick="doReact(\'like\')" style="font-size:13px;padding:8px 18px;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.3)">&#128077; <span style="font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.18);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
-      + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="font-size:13px;padding:8px 18px;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.3)">&#10084; <span style="font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.18);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
-      + '</div>'
+    el.innerHTML = '<div id="arraiabanner" style="position:relative;width:100%;height:220px;overflow:hidden">'
+      + '<img src="festa-junina.jpeg" alt="Arraial" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block" onerror="this.style.display=\'none\'">'
+      + '<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,3,20,.55) 0%,rgba(5,3,20,.15) 40%,rgba(5,3,20,.55) 100%)"></div>'
+      + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding:0 48px;gap:14px">'
+      + '<button class="br" id="btnLike" onclick="doReact(\'like\')" style="font-size:13px;padding:8px 20px;background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.5);backdrop-filter:blur(4px)">&#128077; <span style="font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:1px 9px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
+      + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="font-size:13px;padding:8px 20px;background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.5);backdrop-filter:blur(4px)">&#10084; <span style="font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:1px 9px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
       + '</div></div>';
     if(topbar) topbar.style.display='none';
     el.style.marginBottom='0';
