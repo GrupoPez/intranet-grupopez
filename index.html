@@ -174,8 +174,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 @media(max-width:900px){.hbg{display:flex}}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .ov.open{display:block}
-#bannerDinamico{width:100%}
-#bannerDinamico #arraiabanner{border-radius:0!important}
 </style>
 </head>
 <body>
@@ -212,7 +210,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--texto);min-height:10
 <button class="hbg" id="hbg">&#9776;</button>
 
 <main class="main">
-  <div id="bannerDinamico"></div>
   <div class="topbar">
     <div class="tb-title" id="tbTitle">Inicio</div>
     <div class="tb-right">
@@ -700,38 +697,19 @@ var calAno=new Date().getFullYear(), calMes=new Date().getMonth();
 var notificacoes = [];
 
 function renderBanner() {
-  var el = document.getElementById('bannerDinamico');
-  if (!el) return;
-  var isFesta = new Date() < new Date(2026,5,20);
-  var topbar = document.querySelector('.topbar');
-  if (isFesta) {
-    el.innerHTML = '<div id="arraiabanner" style="position:relative;width:100%;height:220px;overflow:hidden">'
-      + '<img src="festa-junina.jpeg" alt="Arraial" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block" onerror="this.style.display=\'none\'">'
-      + '<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,3,20,.55) 0%,rgba(5,3,20,.15) 40%,rgba(5,3,20,.55) 100%)"></div>'
-      + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding:0 48px;gap:14px">'
-      + '<button class="br" id="btnLike" onclick="doReact(\'like\')" style="font-size:13px;padding:8px 20px;background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.5);backdrop-filter:blur(4px)">&#128077; <span style="font-weight:700;color:#fff">Curtir</span> <span id="likeCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:1px 9px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
-      + '<button class="br" id="btnHeart" onclick="doReact(\'heart\')" style="font-size:13px;padding:8px 20px;background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.5);backdrop-filter:blur(4px)">&#10084; <span style="font-weight:700;color:#fff">Amei</span> <span id="heartCount" style="background:rgba(255,255,255,.2);border-radius:99px;padding:1px 9px;font-size:12px;font-weight:700;color:#fff">0</span></button>'
-      + '</div></div>';
-    if(topbar) topbar.style.display='none';
-    el.style.marginBottom='0';
-  } else {
-    if(topbar) topbar.style.display='';
-    el.style.marginBottom='0';
-    el.innerHTML = '<div style="background:var(--azul);border-radius:var(--rl);padding:36px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden">'
-      + '<div style="position:relative;z-index:1"><div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin-bottom:7px">Portal Corporativo Interno</div>'
-      + '<div style="font-family:var(--ft);font-size:32px;font-weight:700;color:#fff;margin-bottom:7px">Grupo Pez</div>'
-      + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:18px">Conectando pessoas, projetos e resultados.</div>'
-      + '<div style="display:flex;gap:9px;flex-wrap:wrap">'
-      + '<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px">25 anos de historia</div>'
-      + '<div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 14px;color:#fff;font-size:11px">Obras em todo o Brasil</div>'
-      + '<div style="background:rgba(255,209,0,.14);border:1px solid rgba(255,209,0,.28);border-radius:7px;padding:7px 14px;color:var(--am);font-size:11px;font-weight:700">Construindo o futuro</div>'
-      + '</div></div>'
-      + '<div style="flex-shrink:0;width:88px;height:88px;background:rgba(255,255,255,.07);border-radius:18px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,209,0,.18)">'
-      + '<svg width="56" height="56" viewBox="0 0 64 64"><path d="M16 16h12l8 16-8 16H16l8-16z" fill="#FFD100"/><path d="M36 16h12l8 16-8 16H36l8-16z" fill="rgba(255,209,0,.38)"/></svg>'
-      + '</div></div>';
-  }
+  // Banner dinamico desativado — festa vai para Proximos Eventos
+  // Cabeçalho padrao sempre visivel
 }
 
+
+function doReactHome(type) {
+  if (type === 'like') { if (!likedMe) { likes++; likedMe=true; } else { likes--; likedMe=false; } }
+  else { if (!heartedMe) { hearts++; heartedMe=true; } else { hearts--; heartedMe=false; } }
+  var lc=document.getElementById('likeCount'); if(lc) lc.textContent=likes;
+  var hc=document.getElementById('heartCount'); if(hc) hc.textContent=hearts;
+  var bl=document.getElementById('btnLike'); if(bl) bl.style.background=likedMe?'rgba(255,209,0,.3)':'rgba(255,255,255,.15)';
+  var bh=document.getElementById('btnHeart'); if(bh) bh.style.background=heartedMe?'rgba(255,209,0,.3)':'rgba(255,255,255,.15)';
+}
 function doReact(type) {
   var banner = document.getElementById('arraiabanner');
   if (!banner) return;
@@ -784,10 +762,12 @@ function nav(page) {
   var ni = document.querySelector('.ni[data-page="' + page + '"]');
   if (ni) ni.classList.add('active');
   document.getElementById('tbTitle').textContent = PT[page] || page;
-  if(page !== 'home') { var tb=document.querySelector('.topbar'); if(tb) tb.style.display=''; }
-  else { var isFesta2=new Date()<new Date(2026,5,20); var ph=document.getElementById('page-home'); if(ph) ph.style.paddingTop=isFesta2?'0':''; }
   closeSB();
   if (page === 'home') { renderHome(); renderBanner(); }
+  if (page === 'portalrh') {
+    var rhContent = document.getElementById('rhPortalContent');
+    if(rhContent && rhContent.style.display !== 'none') { rhRenderNFs(); }
+  }
   if (page === 'noticias') renderNoticias();
   if (page === 'calendario') renderCal();
 }
@@ -829,8 +809,7 @@ document.addEventListener('click', function(e) {
 
 function renderHome() {
   var pageHome = document.getElementById('page-home');
-  var isFesta = new Date() < new Date(2026,5,20);
-  if (pageHome) pageHome.style.paddingTop = isFesta ? '0' : '';
+  if (pageHome) pageHome.style.paddingTop = '';
   var nl = document.getElementById('homeNewsList');
   nl.innerHTML = noticias.slice(0,3).map(function(n) {
     var action = n.tour ? 'onclick="openTour()"' : n.rh ? 'onclick="openM(\'modalRH\')"' : 'onclick="nav(\'noticias\')"';
@@ -841,7 +820,19 @@ function renderHome() {
       + '<div style="font-size:10px;color:var(--muted)">' + n.data + '</div></div>'
       + '<div style="font-size:11px;color:var(--azul-m);font-weight:600;align-self:center">&#8594;</div></div>';
   }).join('');
-  document.getElementById('homeCalList').innerHTML = eventos.slice(0,3).map(function(e) {
+  var isFesta = new Date() < new Date(2026,5,20);
+  var miniArraial = isFesta
+    ? '<div style="border-radius:10px;overflow:hidden;margin-bottom:10px;position:relative;height:110px;cursor:pointer">'
+      + '<img src="festa-junina.jpeg" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block">'
+      + '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,3,20,.85) 0%,rgba(5,3,20,.1) 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:8px 10px;gap:4px">'
+      + '<div style="font-size:11px;font-weight:700;color:#FFD700">&#127881; Arraial do Grupo Pez</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.75)">19 Jun &middot; 19h &middot; Est. Rua Santo Andre</div>'
+      + '<div style="display:flex;gap:6px;margin-top:2px">'
+      + '<button onclick="doReactHome(\'like\')" id="btnLike" style="font-size:10px;padding:2px 10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;color:#fff;cursor:pointer;font-family:var(--fb)">&#128077; <span id="likeCount">'+likes+'</span></button>'
+      + '<button onclick="doReactHome(\'heart\')" id="btnHeart" style="font-size:10px;padding:2px 10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;color:#fff;cursor:pointer;font-family:var(--fb)">&#10084; <span id="heartCount">'+hearts+'</span></button>'
+      + '</div></div></div>'
+    : '';
+  document.getElementById('homeCalList').innerHTML = miniArraial + eventos.slice(0,3).map(function(e) {
     var d = new Date(e.data + 'T12:00:00');
     var dia = d.getDate().toString().padStart(2,'0');
     var mes = d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','');
@@ -1066,7 +1057,7 @@ document.getElementById('btnNFSubmit').addEventListener('click',function(){
   p.append('NF Cancelada',canc?'SIM - '+(document.getElementById('nfCanceladaInfo').value.trim()||'Sem detalhes'):'Nao');
   p.append('_replyto',entry.email);
   fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
-  .then(function(r){btn.disabled=false;btn.textContent='Enviar NF ao RH';if(r.ok){document.getElementById('nfFormBody').style.display='none';document.getElementById('nfSucesso').style.display='block';document.getElementById('nfProtocol').textContent=prot;nfPDFUrl='';nfXMLUrl='';}else{alert('Erro ao enviar.');}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar NF ao RH';if(r.ok){document.getElementById('nfFormBody').style.display='none';document.getElementById('nfSucesso').style.display='block';document.getElementById('nfProtocol').textContent=prot;nfPDFUrl='';nfXMLUrl='';if(document.getElementById('rhPortalContent').style.display!=='none')rhRenderNFs();}else{alert('Erro ao enviar.');}})
   .catch(function(){btn.disabled=false;btn.textContent='Enviar NF ao RH';alert('Erro de conexao.');});
 });
 document.getElementById('btnNFClear').addEventListener('click',function(){
@@ -1085,8 +1076,16 @@ function calcDiasFP(){
   var d1=new Date(ini), d2=new Date(fim);
   if(d2<d1){document.getElementById('fpDias').textContent='Invalido';return;}
   var dias=Math.round((d2-d1)/86400000)+1;
-  document.getElementById('fpDias').textContent=dias+' dias';
-  document.getElementById('fpDias').dataset.dias=dias;
+  var fpDiasEl=document.getElementById('fpDias');
+  fpDiasEl.textContent=dias+' dia'+(dias>1?'s':'');
+  fpDiasEl.dataset.dias=dias;
+  if(dias<10){
+    fpDiasEl.style.background='#FEE2E2';fpDiasEl.style.color='#991B1B';
+    fpDiasEl.title='Minimo 10 dias';
+  } else {
+    fpDiasEl.style.background='var(--azul-c)';fpDiasEl.style.color='var(--azul)';
+    fpDiasEl.title='';
+  }
 }
 document.getElementById('fpFileAut').addEventListener('change',function(){
   var f=this.files[0]; if(!f) return;
@@ -1098,7 +1097,7 @@ document.getElementById('btnFPSubmit').addEventListener('click',function(){
   var miss=fpReqIds.filter(function(id){var el=document.getElementById(id);return !el||el.value.trim()==='';});
   if(miss.length>0){var el=document.getElementById(miss[0]);if(el){el.focus();el.style.borderColor='#DC2626';setTimeout(function(){el.style.borderColor='';},1500);}alert('Preencha os campos obrigatorios.');return;}
   var dias=parseInt(document.getElementById('fpDias').dataset.dias||0);
-  if(!dias||dias<1){alert('Verifique as datas.');return;}
+  if(!dias||dias<10){alert('O periodo minimo de ferias e de 10 dias. Ajuste as datas.');return;}
   if(!fpAutUrl){alert('Anexe a autorizacao do responsavel.');return;}
   var prot='FER-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
   var now=new Date(), nome=document.getElementById('fpNome').value.trim();
@@ -1113,7 +1112,7 @@ document.getElementById('btnFPSubmit').addEventListener('click',function(){
   p.append('_subject','['+prot+'] Ferias PJ: '+entry.nome);
   p.append('Protocolo',prot); p.append('Colaborador',entry.nome); p.append('Periodo',entry.inicio+' ate '+entry.fim); p.append('Dias',entry.dias); p.append('Saldo apos',entry.saldoApos); p.append('Autorizacao',entry.autUrl); p.append('_replyto',entry.email);
   fetch('https://formspree.io/f/xykvwbrp',{method:'POST',body:p,headers:{'Accept':'application/json'}})
-  .then(function(r){btn.disabled=false;btn.textContent='Enviar solicitacao';if(r.ok){document.getElementById('feriasPJFormBody').style.display='none';document.getElementById('feriasPJSucesso').style.display='block';document.getElementById('fpProtocol').textContent=prot;fpAutUrl='';}else{alert('Erro ao enviar.');}})
+  .then(function(r){btn.disabled=false;btn.textContent='Enviar solicitacao';if(r.ok){document.getElementById('feriasPJFormBody').style.display='none';document.getElementById('feriasPJSucesso').style.display='block';document.getElementById('fpProtocol').textContent=prot;fpAutUrl='';if(document.getElementById('rhPortalContent').style.display!=='none'){rhRenderFerias();}}else{alert('Erro ao enviar.');}})
   .catch(function(){btn.disabled=false;btn.textContent='Enviar solicitacao';alert('Erro de conexao.');});
 });
 document.getElementById('btnFPClear').addEventListener('click',function(){fpReqIds.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('fpObs').value='';document.getElementById('fpDias').textContent='-';delete document.getElementById('fpDias').dataset.dias;document.getElementById('labelAutTxt').textContent='Selecionar autorizacao';document.getElementById('labelAutorizacao').style.borderColor='var(--borda)';fpAutUrl='';});
@@ -1306,8 +1305,12 @@ function carregarAniversariantes(){
       if(!d||isNaN(d.getTime())||!nome) return;
       var faltam=diasAte(d.getMonth(),d.getDate());
       if(faltam<=JANELA){
-        var anoCompl=(faltam===0)?hoje.getFullYear():hoje.getFullYear()+1;
-        var anos=anoCompl-d.getFullYear();
+        // Calcula o ano em que ocorre o proximo aniversario de empresa
+        var anoBase=hoje.getFullYear();
+        var proxAniv=new Date(anoBase, d.getMonth(), d.getDate());
+        var hojeSd2=new Date(hoje.getFullYear(),hoje.getMonth(),hoje.getDate());
+        if(proxAniv < hojeSd2) proxAniv=new Date(anoBase+1, d.getMonth(), d.getDate());
+        var anos=proxAniv.getFullYear()-d.getFullYear();
         empMes.push({nome:nome,sub:sub,dia:d.getDate(),mes:d.getMonth(),faltam:faltam,anos:anos});
       }
     });
